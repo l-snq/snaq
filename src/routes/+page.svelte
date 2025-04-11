@@ -13,3 +13,12 @@
 
 <p> </p>
 
+<div id="Projects">
+
+	<h2> Projects </h2>
+
+	<a href="https://github.com/l-snq/dioxane/">Dioxane:</a> A prototype game engine, made in Rust with WGPU (this was mainly
+	following a tutorial)
+	<img src="./assets/dioxane.png" alt="Dioxane, a game engine!"/>
+
+	</div>
