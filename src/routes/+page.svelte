@@ -1,10 +1,34 @@
-<h1>Hi, My name is Jayden, or you can call me SNQ.</h1>
-<p>I love to build things.</p>
+
+<style lang="css">
+	@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+	* {
+		padding: 0em;
+		width: 100%;
+		height: 100%;
+		display: "flex";
+		justify-content: "center";
+		align-items: "center";
+		font-family: "Roboto Mono", monospace;
+		font-optical-sizing: auto;
+		font-style: normal;
+	}
+	#Content {
+		background-color: black;
+		color: #FAC111;
+
+	}
+
+	#Dioxane {
+		flex-direction: column;
+	}
+</style>
 
 <script>
 	import dioxaneImage from '../lib/assets/dioxane.png'
 </script>
 <div id="Content">
+<h1>Hi, My name is Jayden, or you can call me SNQ.</h1>
+<p>I love to build things.</p>
 	<ul>
 		<li>My <a href="https://github.com/l-snq">GITHUB</a></li>
 		<li><a href="https://github.com/l-snq/clawed/">a web scraper,</a> written in rust</li>
@@ -45,9 +69,11 @@
 
 		<h2> Projects </h2>
 
-		<a href="https://github.com/l-snq/dioxane/">Dioxane:</a> A prototype game engine, made in Rust with WGPU (this was mainly
-		following a tutorial)
-		<img src={dioxaneImage} width=800px alt="Dioxane, a game engine!"/>
+		<div id="Dioxane">
+			<a href="https://github.com/l-snq/dioxane/">Dioxane:</a> A prototype game engine, made in Rust with WGPU (this was mainly
+			following a tutorial) <br />
+			<img src={dioxaneImage} width=800px alt="Dioxane, a game engine!"/>
+		</div>
 
 	</div>
 </div>
