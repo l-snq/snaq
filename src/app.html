@@ -517,7 +517,6 @@
                         ▀▀
             </div>
 							<div class="output">SNQ Portfolio System v1.0</div>
-							<div class="output">Last login: Wed Jan 29 2026</div>
 							<div class="output" style="margin-top: 15px;">Type 'help' for available commands.</div>
 
 							<div id="terminal-output"></div>
@@ -972,6 +971,10 @@ GitHub: <a href="${portfolioData.contact.github}" class="contact-info" target="_
 									let health = 100;
 									let lastTime = 0;
 									let enemySpawnTimer = 0;
+
+									// Reset UI displays
+									scoreDisplay.textContent = '0';
+									healthDisplay.textContent = '100';
 
 									// Isometric conversion helpers
 									function toIso(x, y) {
