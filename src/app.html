@@ -34,6 +34,7 @@
 								margin-bottom: 20px;
 								min-height: 600px;
 								position: relative;
+								animation: crt-glow 4s ease-in-out infinite;
 						}
 
 						.terminal-header {
@@ -73,6 +74,7 @@
 						.terminal-content {
 								padding: 20px;
 								min-height: 500px;
+								animation: crt-flicker 8s infinite;
 						}
 
 						.terminal-output {
@@ -359,6 +361,29 @@
 								51%, 100% { opacity: 0; }
 						}
 
+						/* CRT Glow pulse animation */
+						@keyframes crt-glow {
+								0%, 100% {
+										box-shadow: inset 0 0 100px rgba(255, 140, 0, 0.1),
+												0 0 20px rgba(255, 140, 0, 0.3);
+								}
+								50% {
+										box-shadow: inset 0 0 100px rgba(255, 140, 0, 0.15),
+												0 0 30px rgba(255, 140, 0, 0.5);
+								}
+						}
+
+						/* CRT Flicker animation - Moderate intensity */
+						@keyframes crt-flicker {
+								0%, 100% { opacity: 1; }
+								90% { opacity: 1; }
+								91% { opacity: 0.92; }
+								92% { opacity: 1; }
+								93% { opacity: 0.88; }
+								94% { opacity: 0.96; }
+								95% { opacity: 1; }
+						}
+
 						.section {
 								margin: 20px 0;
 								padding: 15px 0;
@@ -476,6 +501,21 @@
 								);
 								pointer-events: none;
 								z-index: 1;
+						}
+
+						/* CRT Vignette effect */
+						.terminal-container::after {
+								content: "";
+								position: absolute;
+								top: 0;
+								left: 0;
+								width: 100%;
+								height: 100%;
+								background: radial-gradient(ellipse at center,
+										transparent 60%,
+										rgba(0, 0, 0, 0.4) 100%);
+								pointer-events: none;
+								z-index: 3;
 						}
 
 						.terminal-content {
@@ -696,6 +736,52 @@
 							let commandHistory = [];
 							let historyIndex = -1;
 							let isGuiMode = false;
+							let effectsEnabled = true; // Global flag for effects toggle
+
+							// Typewriter effect function (FAST: 20ms per character)
+							async function typewriterEffect(element, html, speed = 20) {
+									// Skip if effects disabled
+									if (!effectsEnabled) {
+											element.innerHTML = html;
+											return Promise.resolve();
+									}
+
+									return new Promise(resolve => {
+											// Create temporary element to parse HTML
+											const temp = document.createElement('div');
+											temp.innerHTML = html;
+
+											// Extract text content while preserving structure
+											const textContent = temp.textContent || temp.innerText;
+
+											element.innerHTML = '';
+											let index = 0;
+
+											// For complex HTML, we need different approach
+											if (html.includes('<a') || html.includes('<span')) {
+													// Display HTML instantly but with reveal effect
+													element.innerHTML = html;
+													element.style.opacity = '0';
+													requestAnimationFrame(() => {
+															element.style.transition = 'opacity 0.3s';
+															element.style.opacity = '1';
+													});
+													setTimeout(resolve, 300);
+											} else {
+													// Simple text typewriter
+													const interval = setInterval(() => {
+															if (index < textContent.length) {
+																	element.textContent = textContent.substring(0, index + 1);
+																	index++;
+															} else {
+																	clearInterval(interval);
+																	element.innerHTML = html; // Restore full HTML
+																	resolve();
+															}
+													}, speed);
+											}
+									});
+							}
 
 							// Mode toggle functionality
 							modeToggle.addEventListener('click', function() {
@@ -816,6 +902,7 @@ building software.`,
   experience  - View work experience
   skills      - View technical skills
   contact     - View contact information
+  effects     - Toggle visual effects (CRT flicker, typewriter)
   clear       - Clear terminal screen
   game        - Launch isometric shooter game`;
 									},
@@ -875,11 +962,29 @@ GitHub: <a href="${portfolioData.contact.github}" class="contact-info" target="_
 									clear: () => {
 											terminalOutput.innerHTML = '';
 											return null;
+									},
+
+									effects: () => {
+											effectsEnabled = !effectsEnabled;
+											const container = document.querySelector('.terminal-container');
+											const content = document.querySelector('.terminal-content');
+
+											if (!effectsEnabled) {
+													// Disable CRT effects
+													container.style.animation = 'none';
+													content.style.animation = 'none';
+													return 'Visual effects disabled.';
+											} else {
+													// Enable CRT effects
+													container.style.animation = '';
+													content.style.animation = '';
+													return 'Visual effects enabled.';
+											}
 									}
 							};
 
-							// Add output to terminal
-							function addOutput(command, output) {
+							// Add output to terminal (async for typewriter effect)
+							async function addOutput(command, output) {
 									const cmdLine = document.createElement('div');
 									cmdLine.className = 'output';
 									cmdLine.innerHTML = `<span class="prompt">lsnq@portfolio:~$</span> <span class="command">${escapeHtml(command)}</span>`;
@@ -889,8 +994,10 @@ GitHub: <a href="${portfolioData.contact.github}" class="contact-info" target="_
 											const outputDiv = document.createElement('div');
 											outputDiv.className = 'output';
 											outputDiv.style.whiteSpace = 'pre-line';
-											outputDiv.innerHTML = output;
 											terminalOutput.appendChild(outputDiv);
+
+											// Apply typewriter effect
+											await typewriterEffect(outputDiv, output, 20);
 									}
 
 									// Scroll to bottom
@@ -904,8 +1011,8 @@ GitHub: <a href="${portfolioData.contact.github}" class="contact-info" target="_
 									return div.innerHTML;
 							}
 
-							// Process command
-							function processCommand(input) {
+							// Process command (async for typewriter effect)
+							async function processCommand(input) {
 									const cmd = input.trim().toLowerCase();
 
 									if (cmd === '') return;
@@ -915,18 +1022,18 @@ GitHub: <a href="${portfolioData.contact.github}" class="contact-info" target="_
 
 									if (commands[cmd]) {
 											const output = commands[cmd]();
-											addOutput(input, output);
+											await addOutput(input, output);
 									} else {
-											addOutput(input, `<span class="error">Bad command or file name: ${escapeHtml(cmd)}</span>`);
+											await addOutput(input, `<span class="error">Bad command or file name: ${escapeHtml(cmd)}</span>`);
 									}
 							}
 
-							// Handle input
-							terminalInput.addEventListener('keydown', function(e) {
+							// Handle input (async for typewriter effect)
+							terminalInput.addEventListener('keydown', async function(e) {
 									if (e.key === 'Enter') {
 											e.preventDefault();
 											const input = terminalInput.value;
-											processCommand(input);
+											await processCommand(input);
 											terminalInput.value = '';
 									} else if (e.key === 'ArrowUp') {
 											e.preventDefault();
