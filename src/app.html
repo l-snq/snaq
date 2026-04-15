@@ -1,1502 +1,1151 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>lsnq@portfolio:~$</title>
-				<style>
-						@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&display=swap');
-
-						* {
-								margin: 0;
-								padding: 0;
-								box-sizing: border-box;
-						}
-
-						body {
-								font-family: 'IBM Plex Mono', monospace;
-								background-color: #1a0f00;
-								color: #ff8c00;
-								overflow-x: hidden;
-								min-height: 100vh;
-								line-height: 1.4;
-						}
-
-						.terminal-container {
-								max-width: 900px;
-								margin: 0 auto;
-								padding: 0;
-								background-color: #000000;
-								border: 4px solid #332200;
-								box-shadow: inset 0 0 100px rgba(255, 140, 0, 0.1);
-								margin-top: 20px;
-								margin-bottom: 20px;
-								min-height: 600px;
-								position: relative;
-								animation: crt-glow 4s ease-in-out infinite;
-						}
-
-						.terminal-header {
-								background-color: #1a0f00;
-								padding: 8px 15px;
-								border-bottom: 2px solid #ff8c00;
-								display: flex;
-								align-items: center;
-								justify-content: space-between;
-								gap: 10px;
-						}
-
-						.terminal-title {
-								color: #ff8c00;
-								font-size: 13px;
-								letter-spacing: 2px;
-								text-transform: uppercase;
-						}
-
-						.mode-toggle {
-								background-color: transparent;
-								border: 1px solid #ff8c00;
-								color: #ff8c00;
-								padding: 4px 12px;
-								font-family: 'IBM Plex Mono', monospace;
-								font-size: 11px;
-								cursor: pointer;
-								transition: all 0.2s ease;
-								text-transform: uppercase;
-						}
-
-						.mode-toggle:hover {
-								background-color: #ff8c00;
-								color: #000000;
-						}
-
-						.terminal-content {
-								padding: 20px;
-								min-height: 500px;
-								animation: crt-flicker 8s infinite;
-						}
-
-						.terminal-output {
-								margin-bottom: 20px;
-						}
-
-						/* GUI Mode Styles */
-						.gui-mode {
-								display: none;
-								padding: 30px;
-						}
-
-						.gui-mode.active {
-								display: block;
-						}
-
-						.terminal-content.hidden {
-								display: none;
-						}
-
-						.gui-section {
-								margin-bottom: 40px;
-						}
-
-						.gui-section-title {
-								color: #ff8c00;
-								font-size: 20px;
-								font-weight: bold;
-								margin-bottom: 20px;
-								border-bottom: 2px solid #ff8c00;
-								padding-bottom: 8px;
-						}
-
-						.gui-intro {
-								color: #cc7000;
-								font-size: 14px;
-								line-height: 1.6;
-								margin-bottom: 30px;
-						}
-
-						.project-card {
-								background-color: #0a0500;
-								border: 1px solid #ff8c00;
-								padding: 15px;
-								margin-bottom: 15px;
-						}
-
-						.project-card-title {
-								color: #ff8c00;
-								font-size: 16px;
-								font-weight: bold;
-								margin-bottom: 8px;
-						}
-
-						.project-card-tech {
-								color: #996600;
-								font-size: 11px;
-								margin-bottom: 8px;
-						}
-
-						.project-card-desc {
-								color: #cc7000;
-								font-size: 13px;
-								line-height: 1.4;
-								margin-bottom: 10px;
-						}
-
-						.project-card-link {
-								color: #ffaa33;
-								text-decoration: none;
-								font-size: 12px;
-								border: 1px solid #ffaa33;
-								padding: 4px 10px;
-								display: inline-block;
-								transition: all 0.2s ease;
-						}
-
-						.project-card-link:hover {
-								background-color: #ffaa33;
-								color: #000000;
-						}
-
-						.experience-card {
-								background-color: #0a0500;
-								border-left: 3px solid #ff8c00;
-								padding: 15px;
-								margin-bottom: 15px;
-						}
-
-						.experience-card-title {
-								color: #ff8c00;
-								font-size: 15px;
-								font-weight: bold;
-						}
-
-						.experience-card-company {
-								color: #ffaa33;
-								font-size: 14px;
-								margin-top: 4px;
-						}
-
-						.experience-card-date {
-								color: #996600;
-								font-size: 11px;
-								margin-top: 4px;
-						}
-
-						.experience-card-desc {
-								color: #cc7000;
-								font-size: 13px;
-								margin-top: 8px;
-								line-height: 1.4;
-						}
-
-						.skills-container {
-								display: grid;
-								grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-								gap: 15px;
-						}
-
-						.skill-card {
-								background-color: #0a0500;
-								border: 1px solid #ff8c00;
-								padding: 15px;
-						}
-
-						.skill-card-title {
-								color: #ff8c00;
-								font-size: 14px;
-								font-weight: bold;
-								margin-bottom: 10px;
-						}
-
-						.skill-card-content {
-								color: #cc7000;
-								font-size: 12px;
-								line-height: 1.4;
-						}
-
-						.contact-card {
-								background-color: #0a0500;
-								border: 1px solid #ff8c00;
-								padding: 20px;
-						}
-
-						.contact-link {
-								color: #ffaa33;
-								text-decoration: underline;
-								font-size: 14px;
-						}
-
-						.contact-link:hover {
-								color: #ffc266;
-						}
-
-						/* Game Styles */
-						.game-container {
-								display: none;
-								position: fixed;
-								top: 0;
-								left: 0;
-								width: 100%;
-								height: 100%;
-								background-color: rgba(0, 0, 0, 0.95);
-								z-index: 1000;
-								justify-content: center;
-								align-items: center;
-								flex-direction: column;
-						}
-
-						.game-container.active {
-								display: flex;
-						}
-
-						#game-canvas {
-								border: 4px solid #ff8c00;
-								background-color: #000000;
-								box-shadow: 0 0 30px rgba(255, 140, 0, 0.3);
-						}
-
-						.game-ui {
-								color: #ff8c00;
-								font-family: 'IBM Plex Mono', monospace;
-								margin-top: 20px;
-								text-align: center;
-						}
-
-						.game-ui h2 {
-								font-size: 24px;
-								margin-bottom: 10px;
-						}
-
-						.game-ui p {
-								font-size: 14px;
-								color: #cc7000;
-								margin: 5px 0;
-						}
-
-						.game-controls {
-								margin-top: 15px;
-								font-size: 12px;
-								color: #996600;
-						}
-
-						.game-over-screen {
-								display: none;
-								position: absolute;
-								text-align: center;
-								color: #ff8c00;
-								font-family: 'IBM Plex Mono', monospace;
-						}
-
-						.game-over-screen.active {
-								display: block;
-						}
-
-						.game-over-screen h2 {
-								font-size: 48px;
-								margin-bottom: 20px;
-						}
-
-						.game-over-screen p {
-								font-size: 18px;
-								margin: 10px 0;
-						}
-
-						.prompt {
-								color: #ff8c00;
-								font-weight: bold;
-								font-size: 14px;
-						}
-
-						.command {
-								color: #ffaa33;
-								margin-left: 10px;
-								font-size: 14px;
-						}
-
-						.output {
-								margin: 10px 0;
-								color: #cc7000;
-								padding-left: 0;
-								font-size: 14px;
-						}
-
-						.ascii-art {
-								color: #ff8c00;
-								font-size: 11px;
-								line-height: 1.1;
-								margin: 15px 0;
-								white-space: pre;
-								font-weight: bold;
-						}
-
-						.input-line {
-								display: flex;
-								align-items: center;
-								margin-top: 10px;
-						}
-
-						#terminal-input {
-								background: transparent;
-								border: none;
-								color: #ffaa33;
-								font-family: 'IBM Plex Mono', monospace;
-								font-size: 14px;
-								outline: none;
-								flex: 1;
-								margin-left: 10px;
-								caret-color: #ff8c00;
-						}
-
-						.cursor {
-								display: inline-block;
-								width: 8px;
-								height: 16px;
-								background-color: #ff8c00;
-								animation: blink 1s infinite;
-								margin-left: 2px;
-						}
-
-						@keyframes blink {
-								0%, 50% { opacity: 1; }
-								51%, 100% { opacity: 0; }
-						}
-
-						/* CRT Glow pulse animation */
-						@keyframes crt-glow {
-								0%, 100% {
-										box-shadow: inset 0 0 100px rgba(255, 140, 0, 0.1),
-												0 0 20px rgba(255, 140, 0, 0.3);
-								}
-								50% {
-										box-shadow: inset 0 0 100px rgba(255, 140, 0, 0.15),
-												0 0 30px rgba(255, 140, 0, 0.5);
-								}
-						}
-
-						/* CRT Flicker animation - Moderate intensity */
-						@keyframes crt-flicker {
-								0%, 100% { opacity: 1; }
-								90% { opacity: 1; }
-								91% { opacity: 0.92; }
-								92% { opacity: 1; }
-								93% { opacity: 0.88; }
-								94% { opacity: 0.96; }
-								95% { opacity: 1; }
-						}
-
-						.section {
-								margin: 20px 0;
-								padding: 15px 0;
-						}
-
-						.section-title {
-								color: #ff8c00;
-								font-size: 16px;
-								font-weight: bold;
-								margin-bottom: 12px;
-								text-decoration: underline;
-						}
-
-						.project-link {
-								color: #ffaa33;
-								text-decoration: underline;
-								transition: all 0.2s ease;
-						}
-
-						.project-link:hover {
-								color: #ffc266;
-								background-color: #1a0f00;
-						}
-
-						.tech-stack {
-								color: #996600;
-								font-size: 11px;
-								margin-top: 3px;
-						}
-
-						.experience-item {
-								margin: 12px 0;
-								padding: 8px 0;
-								border-left: 2px solid #ff8c00;
-								padding-left: 10px;
-						}
-
-						.experience-title {
-								color: #ff8c00;
-								font-weight: bold;
-								font-size: 14px;
-						}
-
-						.experience-company {
-								color: #ffaa33;
-								font-size: 13px;
-						}
-
-						.experience-date {
-								color: #996600;
-								font-size: 11px;
-						}
-
-						.experience-desc {
-								color: #cc7000;
-								margin-top: 4px;
-								font-size: 12px;
-						}
-
-						.contact-info {
-								color: #ffaa33;
-								text-decoration: underline;
-						}
-
-						.contact-info:hover {
-								color: #ffc266;
-						}
-
-						.skills-grid {
-								display: grid;
-								grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-								gap: 15px;
-								margin-top: 12px;
-						}
-
-						.skill-category {
-								padding: 10px;
-								border: 1px solid #ff8c00;
-						}
-
-						.skill-category h4 {
-								color: #ff8c00;
-								margin-bottom: 8px;
-								font-size: 13px;
-						}
-
-						.skill-list {
-								color: #cc7000;
-								font-size: 11px;
-								line-height: 1.3;
-						}
-
-						.error {
-								color: #ff4400;
-						}
-
-						.success {
-								color: #ffaa33;
-						}
-
-						/* Scanline effect */
-						.terminal-container::before {
-								content: "";
-								position: absolute;
-								top: 0;
-								left: 0;
-								width: 100%;
-								height: 100%;
-								background: repeating-linear-gradient(
-										0deg,
-										rgba(0, 0, 0, 0.15),
-										rgba(0, 0, 0, 0.15) 1px,
-										transparent 1px,
-										transparent 2px
-								);
-								pointer-events: none;
-								z-index: 1;
-						}
-
-						/* CRT Vignette effect */
-						.terminal-container::after {
-								content: "";
-								position: absolute;
-								top: 0;
-								left: 0;
-								width: 100%;
-								height: 100%;
-								background: radial-gradient(ellipse at center,
-										transparent 60%,
-										rgba(0, 0, 0, 0.4) 100%);
-								pointer-events: none;
-								z-index: 3;
-						}
-
-						.terminal-content {
-								position: relative;
-								z-index: 2;
-						}
-
-						@media (max-width: 768px) {
-								.terminal-container {
-										margin: 10px;
-										padding: 0;
-								}
-
-								.ascii-art {
-										font-size: 9px;
-								}
-
-								.skills-grid {
-										grid-template-columns: 1fr;
-								}
-						}
-				</style>		%sveltekit.head%
-	</head>
-	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents">%sveltekit.body%</div>
-	<div class="terminal-container">
-					<div class="terminal-header">
-							<div class="terminal-title">lsnq@portfolio:~$</div>
-							<button class="mode-toggle" id="mode-toggle">Switch to GUI Mode</button>
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="%sveltekit.assets%/favicon.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>SNQ // SYSTEM ACTIVE</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+	<style>
+		*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+		:root {
+			--void:    #020408;
+			--deep:    #040c18;
+			--panel:   #030b16;
+			--b0:      #1e0800;
+			--b1:      #2e1000;
+			--b2:      #5a2200;
+			--cyan:    #ff8c00;
+			--cyan2:   #ffaa33;
+			--cyandim: #5a2800;
+			--amber:   #ff8c00;
+			--amberdim:#4a2900;
+			--red:     #ff2244;
+			--green:   #00ff88;
+			--txt:     #a87050;
+			--txthi:   #f0d8a8;
+			--txtlo:   #2a1200;
+			--jp:      #4a1e00;
+			--mono:    'Share Tech Mono', monospace;
+		}
+
+		html { scroll-behavior: smooth; }
+
+		body {
+			font-family: var(--mono);
+			background: var(--void);
+			color: var(--txthi);
+			overflow-x: hidden;
+			cursor: none;
+			/* grid background */
+			background-image:
+				linear-gradient(rgba(255,140,0,0.03) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(255,140,0,0.03) 1px, transparent 1px);
+			background-size: 48px 48px;
+		}
+
+		/* scanline overlay */
+		body::before {
+			content: '';
+			position: fixed;
+			inset: 0;
+			background: repeating-linear-gradient(
+				0deg, transparent, transparent 3px,
+				rgba(0,0,0,0.12) 3px, rgba(0,0,0,0.12) 4px
+			);
+			pointer-events: none;
+			z-index: 9000;
+		}
+
+		::selection { background: var(--cyan); color: var(--void); }
+		a { color: inherit; text-decoration: none; }
+
+		/* ── CURSOR ── */
+		#cur {
+			position: fixed; top:0; left:0;
+			pointer-events: none; z-index: 9990;
+			transform: translate(-50%,-50%);
+		}
+		#cur svg { transition: transform 0.15s ease, opacity 0.15s; }
+		body.hovering #cur svg { transform: scale(1.6); }
+
+		/* ── STATUS BAR (fixed top) ── */
+		.sbar {
+			position: fixed; top:0; left:0; right:0; z-index: 800;
+			height: 34px;
+			background: rgba(2,4,8,0.95);
+			border-bottom: 1px solid var(--b1);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 0 20px;
+			gap: 12px;
+		}
+		.sbar-seg {
+			display: flex; align-items: center; gap: 10px;
+			font-size: 10px; letter-spacing: 0.12em;
+			color: var(--txt); white-space: nowrap;
+		}
+		.sbar-divider { color: var(--b2); }
+		.blink-dot {
+			width: 6px; height: 6px; border-radius: 50%;
+			background: var(--green);
+			animation: blink 1.4s ease-in-out infinite;
+			flex-shrink: 0;
+		}
+		.blink-dot.amber { background: var(--amber); }
+		.radar-wrap {
+			position: relative;
+			width: 22px; height: 22px; flex-shrink: 0;
+		}
+		.radar-circle {
+			position: absolute; inset: 0;
+			border-radius: 50%;
+			border: 1px solid var(--cyandim);
+		}
+		.radar-circle::after {
+			content: '';
+			position: absolute; top:50%; left:50%;
+			width: 50%; height: 1px;
+			background: linear-gradient(90deg, var(--cyan), transparent);
+			transform-origin: left center;
+			animation: sweep 3s linear infinite;
+		}
+		.radar-dot {
+			position: absolute;
+			width: 3px; height: 3px; border-radius: 50%;
+			background: var(--cyan);
+			top: 30%; left: 60%;
+			animation: blink 2s ease-in-out infinite;
+		}
+		.nav-links {
+			display: flex; gap: 24px;
+		}
+		.nav-links a {
+			font-size: 10px; letter-spacing: 0.15em;
+			color: var(--txt); text-transform: uppercase;
+			transition: color 0.2s;
+		}
+		.nav-links a:hover { color: var(--cyan); }
+
+		/* ── HERO ── */
+		.hero {
+			min-height: 100vh;
+			display: flex; align-items: center; justify-content: center;
+			position: relative; overflow: hidden;
+			padding-top: 34px;
+		}
+
+		/* reticles */
+		.reticle {
+			position: absolute; top:50%; left:50%;
+			border-radius: 50%;
+			transform: translate(-50%,-50%);
+			pointer-events: none;
+		}
+		.reticle-1 {
+			width: 600px; height: 600px;
+			border: 1px dashed rgba(255,140,0,0.08);
+			animation: rot-r 40s linear infinite;
+		}
+		.reticle-2 {
+			width: 400px; height: 400px;
+			border: 1px solid rgba(255,140,0,0.12);
+			animation: rot 30s linear infinite;
+		}
+		.reticle-3 {
+			width: 220px; height: 220px;
+			border: 1px solid rgba(255,140,0,0.2);
+			animation: rot-r 20s linear infinite;
+		}
+		.reticle-2::before, .reticle-2::after {
+			content: '';
+			position: absolute; background: var(--cyandim);
+		}
+		.reticle-2::before { top:0; left:50%; width:1px; height:12px; transform:translateX(-50%); }
+		.reticle-2::after  { bottom:0; left:50%; width:1px; height:12px; transform:translateX(-50%); }
+
+		/* hero corners */
+		.hcorner {
+			position: absolute;
+			font-size: 9px; letter-spacing: 0.15em;
+			color: var(--txt); line-height: 1.8;
+		}
+		.hcorner span { display:block; }
+		.hcorner .hi { color: var(--cyan); }
+		.hcorner.tl { top:60px; left:28px; }
+		.hcorner.tr { top:60px; right:28px; text-align:right; }
+		.hcorner.bl { bottom:52px; left:28px; }
+		.hcorner.br { bottom:52px; right:28px; text-align:right; }
+
+		/* corner brackets */
+		.hcorner.tl::before { content:'┌─'; color: var(--b2); margin-right:6px; }
+		.hcorner.tr::after  { content:'─┐'; color: var(--b2); margin-left:6px; }
+		.hcorner.bl::before { content:'└─'; color: var(--b2); margin-right:6px; }
+		.hcorner.br::after  { content:'─┘'; color: var(--b2); margin-left:6px; }
+
+		.hero-body {
+			text-align: center; position: relative; z-index: 2;
+		}
+		.hero-eyebrow {
+			font-size: 10px; letter-spacing: 0.4em;
+			color: var(--txt); margin-bottom: 16px;
+		}
+		.hero-name {
+			font-size: clamp(96px, 18vw, 220px);
+			letter-spacing: -0.03em; line-height: 0.9;
+			color: var(--cyan2);
+			text-shadow:
+				0 0 40px rgba(255,140,0,0.7),
+				0 0 80px rgba(255,140,0,0.4),
+				0 0 120px rgba(255,140,0,0.2);
+			animation: name-pulse 4s ease-in-out infinite;
+		}
+		.hero-sub {
+			font-size: 11px; letter-spacing: 0.3em;
+			color: var(--txt); margin-top: 20px;
+		}
+		.hero-badges {
+			display: flex; justify-content: center; gap: 16px;
+			margin-top: 28px; flex-wrap: wrap;
+		}
+		.badge {
+			font-size: 9px; letter-spacing: 0.2em; padding: 5px 12px;
+			border: 1px solid var(--b1); color: var(--txt);
+			display: flex; align-items: center; gap: 7px;
+		}
+		.badge .bd { width:5px;height:5px;border-radius:50%; flex-shrink:0; }
+		.badge .bd.g { background: var(--green); animation:blink 2s infinite; }
+		.badge .bd.a { background: var(--amber); animation:blink 2.5s infinite; }
+
+		.hero-scroll {
+			position: absolute; bottom: 36px; left:50%;
+			transform: translateX(-50%);
+			font-size: 9px; letter-spacing: 0.3em; color: var(--txtlo);
+			animation: blink 2s ease-in-out infinite;
+		}
+
+		/* ── PANEL ── */
+		.panel-wrap {
+			padding: 24px 28px;
+		}
+
+		.panel {
+			border: 1px solid var(--b1);
+			background: var(--panel);
+			position: relative;
+			box-shadow: 0 0 0 1px rgba(255,140,0,0.04),
+						inset 0 0 60px rgba(255,140,0,0.02);
+		}
+		.panel:hover {
+			border-color: var(--b2);
+			box-shadow: 0 0 24px rgba(255,140,0,0.08),
+						inset 0 0 60px rgba(255,140,0,0.03);
+		}
+
+		/* corner chrome */
+		.panel::before {
+			content: '';
+			position: absolute; top:-1px; left:-1px;
+			width: 16px; height: 16px;
+			border-top: 2px solid var(--cyan);
+			border-left: 2px solid var(--cyan);
+		}
+		.panel::after {
+			content: '';
+			position: absolute; bottom:-1px; right:-1px;
+			width: 16px; height: 16px;
+			border-bottom: 2px solid var(--cyan);
+			border-right: 2px solid var(--cyan);
+		}
+
+		.panel-hdr {
+			display: flex; align-items: center; gap: 10px;
+			padding: 10px 16px;
+			border-bottom: 1px solid var(--b0);
+			background: repeating-linear-gradient(
+				-55deg,
+				rgba(255,140,0,0.015) 0px, rgba(255,140,0,0.015) 3px,
+				transparent 3px, transparent 14px
+			);
+		}
+		.panel-dot {
+			width: 7px; height: 7px; border-radius: 50%;
+			background: var(--green); flex-shrink: 0;
+			animation: blink 1.8s ease-in-out infinite;
+			box-shadow: 0 0 6px var(--green);
+		}
+		.panel-id   { font-size: 10px; color: var(--cyan); letter-spacing: 0.15em; }
+		.panel-sep  { color: var(--b2); font-size: 10px; }
+		.panel-title{ font-size: 12px; letter-spacing: 0.2em; color: var(--txthi); }
+		.panel-jp   { font-size: 10px; color: var(--jp); margin-left: auto; letter-spacing: 0.1em; }
+		.panel-status {
+			font-size: 9px; letter-spacing: 0.15em; padding: 2px 8px;
+			border: 1px solid var(--green); color: var(--green);
+			flex-shrink: 0;
+		}
+		.panel-body { padding: 28px 20px; }
+
+		/* ── ABOUT ── */
+		.about-grid {
+			display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+		}
+		.about-statement {
+			font-size: clamp(17px, 2.5vw, 24px);
+			line-height: 1.5; color: var(--txthi);
+			letter-spacing: 0.03em;
+		}
+		.about-statement em {
+			color: var(--cyan); font-style: normal;
+		}
+		.about-detail {
+			font-size: 13px; line-height: 1.9; color: var(--txt);
+		}
+		.about-detail p + p { margin-top: 14px; }
+		.status-grid {
+			margin-top: 28px;
+			display: flex; flex-direction: column; gap: 6px;
+		}
+		.status-row {
+			display: flex; align-items: center; gap: 10px;
+			font-size: 10px; letter-spacing: 0.1em; color: var(--txt);
+		}
+		.status-row .dot { width:5px;height:5px;border-radius:50%;flex-shrink:0; }
+		.dot-g { background: var(--green); box-shadow:0 0 4px var(--green); }
+		.dot-a { background: var(--amber); box-shadow:0 0 4px var(--amber); }
+		.dot-c { background: var(--cyan);  box-shadow:0 0 4px var(--cyan); }
+		.status-label { color: var(--cyan); min-width: 80px; }
+		.status-val   { color: var(--txthi); }
+
+		/* ── PROJECTS ── */
+		.projects-grid {
+			display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+		}
+		.proj-card {
+			border: 1px solid var(--b0);
+			background: rgba(2,8,20,0.6);
+			padding: 18px; position: relative;
+			transition: border-color 0.2s, box-shadow 0.2s;
+			display: flex; flex-direction: column;
+		}
+		.proj-card::before {
+			content: '';
+			position: absolute; top:0; left:0; right:0;
+			height: 2px;
+			background: var(--cyandim);
+			transition: background 0.2s;
+		}
+		.proj-card:hover { border-color: var(--b2); }
+		.proj-card:hover::before { background: var(--cyan); }
+		.proj-card:hover { box-shadow: 0 0 20px rgba(255,140,0,0.1); }
+
+		.proj-num {
+			font-size: 9px; letter-spacing: 0.2em; color: var(--txtlo);
+			margin-bottom: 8px;
+		}
+		.proj-name {
+			font-size: 18px; color: var(--txthi); letter-spacing: 0.08em;
+			margin-bottom: 6px;
+		}
+		.proj-stack {
+			font-size: 9px; letter-spacing: 0.1em; color: var(--cyan);
+			margin-bottom: 12px;
+		}
+		.proj-desc {
+			font-size: 12px; line-height: 1.7; color: var(--txt);
+			flex: 1; margin-bottom: 16px;
+		}
+		.proj-link {
+			font-size: 10px; letter-spacing: 0.15em;
+			color: var(--cyan); border: 1px solid var(--cyandim);
+			padding: 6px 12px; display: inline-block;
+			transition: all 0.2s; align-self: flex-start;
+		}
+		.proj-link:hover { background: var(--cyan); color: var(--void); border-color: var(--cyan); }
+
+		/* ── EXPERIENCE ── */
+		.exp-list { display:flex; flex-direction:column; }
+		.exp-item {
+			display: grid; grid-template-columns: 180px 1fr;
+			gap: 32px; padding: 28px 0;
+			border-bottom: 1px solid var(--b0);
+		}
+		.exp-item:first-child { border-top: 1px solid var(--b0); }
+		.exp-left { padding-top: 2px; }
+		.exp-date {
+			font-size: 10px; letter-spacing: 0.15em; color: var(--cyan);
+			margin-bottom: 6px;
+		}
+		.exp-co {
+			font-size: 10px; letter-spacing: 0.08em; color: var(--txt);
+			line-height: 1.5;
+		}
+		.exp-title {
+			font-size: 15px; letter-spacing: 0.08em; color: var(--txthi);
+			margin-bottom: 10px;
+		}
+		.exp-desc {
+			font-size: 12px; line-height: 1.8; color: var(--txt);
+		}
+
+		/* ── SKILLS ── */
+		.skills-grid {
+			display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+		}
+		.sub-panel {
+			border: 1px solid var(--b0);
+			background: rgba(3,11,22,0.8);
+		}
+		.sub-panel-hdr {
+			padding: 8px 14px;
+			border-bottom: 1px solid var(--b0);
+			font-size: 9px; letter-spacing: 0.25em; color: var(--cyan);
+			background: rgba(255,140,0,0.03);
+		}
+		.sub-panel-body { padding: 14px; }
+		.skill-tags { display:flex; flex-wrap:wrap; gap:6px; }
+		.stag {
+			font-size: 10px; letter-spacing: 0.08em;
+			padding: 3px 9px;
+			border: 1px solid var(--b0); color: var(--txt);
+			transition: all 0.2s;
+		}
+		.stag:hover { border-color: var(--cyan); color: var(--cyan); }
+
+		/* ── CONTACT ── */
+		.contact-big {
+			font-size: clamp(26px, 5vw, 52px);
+			letter-spacing: 0.05em; line-height: 1.2;
+			color: var(--txthi); margin-bottom: 36px;
+		}
+		.contact-big span { color: var(--cyan); }
+		.uplink-row {
+			display: flex; align-items: center; gap: 14px;
+			padding: 16px 0; border-bottom: 1px solid var(--b0);
+			color: var(--txt); font-size: 12px;
+			letter-spacing: 0.12em; transition: all 0.2s;
+		}
+		.uplink-row:first-of-type { border-top: 1px solid var(--b0); }
+		.uplink-row:hover { color: var(--cyan); padding-left: 10px; }
+		.uplink-row .arrow { margin-left:auto; color: var(--cyandim); }
+		.uplink-row:hover .arrow { color: var(--cyan); }
+
+		/* ── FOOTER ── */
+		.footer {
+			padding: 20px 28px;
+			border-top: 1px solid var(--b0);
+			display: flex; align-items: center;
+			justify-content: space-between;
+			margin-bottom: 34px;
+		}
+		.footer-id { font-size: 10px; letter-spacing: 0.15em; color: var(--txtlo); }
+		.game-btn {
+			font-family: var(--mono);
+			font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+			padding: 9px 18px; border: 1px solid var(--b1);
+			background: transparent; color: var(--txt); cursor: pointer;
+			transition: all 0.2s;
+		}
+		.game-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+		/* ── GAME ── */
+		.game-wrap {
+			display: none; position: fixed; inset: 0;
+			background: rgba(0,0,0,0.97); z-index: 9500;
+			justify-content: center; align-items: center; flex-direction: column;
+		}
+		.game-wrap.active { display: flex; }
+		#game-canvas {
+			border: 1px solid var(--cyan);
+			background: #000;
+			box-shadow: 0 0 40px rgba(255,140,0,0.2);
+		}
+		.game-ui {
+			font-family: var(--mono); margin-top: 16px; text-align: center;
+		}
+		.game-ui p { font-size: 11px; color: var(--txt); margin: 3px 0; }
+		#game-stats p { color: var(--cyan); font-size: 13px; }
+		.game-over-screen {
+			display: none; position: absolute; inset: 0;
+			justify-content: center; align-items: center;
+			flex-direction: column; text-align: center;
+			font-family: var(--mono);
+			background: rgba(2,4,8,0.9);
+		}
+		.game-over-screen.active { display: flex; }
+		.game-over-screen h2 {
+			font-size: 52px; color: var(--red); margin-bottom: 20px;
+			text-shadow: 0 0 20px rgba(255,34,68,0.6);
+		}
+		.game-over-screen p { font-size: 14px; color: var(--txt); margin: 6px 0; }
+
+		/* ── REVEAL ── */
+		.reveal {
+			opacity: 0; transform: translateY(20px);
+			transition: opacity 0.6s ease, transform 0.6s ease;
+		}
+		.reveal.vis { opacity:1; transform:none; }
+
+		/* ── KEYFRAMES ── */
+		@keyframes blink {
+			0%,100%{opacity:1;} 50%{opacity:0;}
+		}
+		@keyframes sweep {
+			from{transform:rotate(0deg);} to{transform:rotate(360deg);}
+		}
+		@keyframes rot {
+			from{transform:translate(-50%,-50%) rotate(0deg);}
+			to  {transform:translate(-50%,-50%) rotate(360deg);}
+		}
+		@keyframes rot-r {
+			from{transform:translate(-50%,-50%) rotate(0deg);}
+			to  {transform:translate(-50%,-50%) rotate(-360deg);}
+		}
+		@keyframes name-pulse {
+			0%,100%{
+				text-shadow:0 0 40px rgba(255,140,0,0.7),0 0 80px rgba(255,140,0,0.4),0 0 120px rgba(255,140,0,0.2);
+			}
+			50%{
+				text-shadow:0 0 60px rgba(255,140,0,0.9),0 0 120px rgba(255,140,0,0.6),0 0 180px rgba(255,140,0,0.3);
+			}
+		}
+
+		/* ── RESPONSIVE ── */
+		@media(max-width:768px){
+			.sbar .nav-links{display:none;}
+			.about-grid{grid-template-columns:1fr;}
+			.projects-grid{grid-template-columns:1fr;}
+			.skills-grid{grid-template-columns:1fr;}
+			.exp-item{grid-template-columns:1fr;gap:8px;}
+			.hcorner.tr,.hcorner.br{display:none;}
+			.reticle-1{width:300px;height:300px;}
+			.footer{flex-direction:column;gap:12px;}
+		}
+	</style>
+	%sveltekit.head%
+</head>
+<body data-sveltekit-preload-data="hover">
+<div style="display:contents">%sveltekit.body%</div>
+
+<!-- Custom cursor -->
+<div id="cur">
+	<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<circle cx="16" cy="16" r="10" stroke="#ff8c00" stroke-width="0.8" stroke-dasharray="3 3"/>
+		<circle cx="16" cy="16" r="2" fill="#ff8c00"/>
+		<line x1="16" y1="2" x2="16" y2="8" stroke="#ff8c00" stroke-width="1"/>
+		<line x1="16" y1="24" x2="16" y2="30" stroke="#ff8c00" stroke-width="1"/>
+		<line x1="2" y1="16" x2="8" y2="16" stroke="#ff8c00" stroke-width="1"/>
+		<line x1="24" y1="16" x2="30" y2="16" stroke="#ff8c00" stroke-width="1"/>
+	</svg>
+</div>
+
+<!-- Status bar -->
+<div class="sbar">
+	<div class="sbar-seg">
+		<div class="radar-wrap">
+			<div class="radar-circle"><div class="radar-dot"></div></div>
+		</div>
+		<div class="blink-dot"></div>
+		<span>NEXUS-7</span>
+		<span class="sbar-divider">//</span>
+		<span>UPLINK STABLE</span>
+	</div>
+	<div class="sbar-seg">
+		<nav class="nav-links">
+			<a href="#about">SYS-01</a>
+			<a href="#projects">SYS-02</a>
+			<a href="#experience">SYS-03</a>
+			<a href="#skills">SYS-04</a>
+			<a href="#contact">SYS-05</a>
+		</nav>
+	</div>
+	<div class="sbar-seg">
+		<span id="sbar-coords">LAT 49°15'N // LON 123°06'W</span>
+		<span class="sbar-divider">//</span>
+		<span id="sbar-time">UTC 00:00:00</span>
+		<div class="blink-dot amber"></div>
+	</div>
+</div>
+
+<!-- ── HERO ── -->
+<section class="hero" id="top">
+	<div class="reticle reticle-1"></div>
+	<div class="reticle reticle-2"></div>
+	<div class="reticle reticle-3"></div>
+
+	<div class="hcorner tl">
+		<span class="hi" id="hero-lat">32°44'14"N</span>
+		<span>SECTOR // ALPHA-7</span>
+		<span>監視システム</span>
+	</div>
+	<div class="hcorner tr">
+		<span class="hi">UPLINK // STABLE</span>
+		<span>SIG: ████░ 89%</span>
+		<span>接続確立</span>
+	</div>
+	<div class="hcorner bl">
+		<span>SNQ-PORTFOLIO-v2.0</span>
+		<span>NEURAL LINK // NOMINAL</span>
+		<span class="hi">識別情報</span>
+	</div>
+	<div class="hcorner br">
+		<span>CLASSIFICATION: ACTIVE</span>
+		<span class="hi">TARGET ACQUIRED</span>
+		<span>稼働中</span>
+	</div>
+
+	<div class="hero-body">
+		<div class="hero-eyebrow">PERSONNEL FILE // DESIGNATION CONFIRMED</div>
+		<h1 class="hero-name">SNQ</h1>
+		<div class="hero-sub">FULL STACK DEVELOPER // SYSTEMS PROGRAMMER // TINKERER</div>
+		<div class="hero-badges">
+			<div class="badge"><span class="bd g"></span>OPERATIONAL</div>
+			<div class="badge"><span class="bd a"></span>RUST // TS // C#</div>
+			<div class="badge"><span class="bd g"></span>UPLINK ACTIVE</div>
+		</div>
+	</div>
+
+	<div class="hero-scroll">▼ SCROLL TO ACCESS ▼</div>
+</section>
+
+<!-- ── SYS-01: ABOUT ── -->
+<div class="panel-wrap reveal" id="about">
+	<div class="panel">
+		<div class="panel-hdr">
+			<div class="panel-dot"></div>
+			<span class="panel-id">SYS-01</span>
+			<span class="panel-sep">//</span>
+			<span class="panel-title">PERSONNEL FILE</span>
+			<span class="panel-jp">識別情報</span>
+			<span class="panel-status">[ ACTIVE ]</span>
+		</div>
+		<div class="panel-body">
+			<div class="about-grid">
+				<div>
+					<div class="about-statement">
+						I notice software that <em>should exist but doesn't.</em><br>Then I build it.
 					</div>
-
-					<div class="terminal-content" id="terminal-mode">
-						<div class="ascii-art">
-    ███████ ███    ██  ██████
-    ██      ████   ██ ██    ██
-    ███████ ██ ██  ██ ██    ██
-         ██ ██  ██ ██ ██ ▄▄ ██
-    ███████ ██   ████  ██████
-                        ▀▀
-            </div>
-							<div class="output">SNQ Portfolio System v1.0</div>
-							<div class="output" style="margin-top: 15px;">Type 'help' for available commands.</div>
-
-							<div id="terminal-output"></div>
-
-							<div class="input-line">
-									<span class="prompt">lsnq@portfolio:~$</span>
-									<input type="text" id="terminal-input" autocomplete="off" autofocus />
-							</div>
+					<div class="status-grid">
+						<div class="status-row">
+							<span class="dot dot-g"></span>
+							<span class="status-label">IDENTITY:</span>
+							<span class="status-val">SNQ // JAYDEN T.</span>
+						</div>
+						<div class="status-row">
+							<span class="dot dot-c"></span>
+							<span class="status-label">ROLE:</span>
+							<span class="status-val">FULL STACK DEVELOPER</span>
+						</div>
+						<div class="status-row">
+							<span class="dot dot-g"></span>
+							<span class="status-label">SYSTEMS:</span>
+							<span class="status-val">RUST / TS / C# / PYTHON</span>
+						</div>
+						<div class="status-row">
+							<span class="dot dot-a"></span>
+							<span class="status-label">SINCE:</span>
+							<span class="status-val">AGE 14 // SELF-INITIATED</span>
+						</div>
+						<div class="status-row">
+							<span class="dot dot-g"></span>
+							<span class="status-label">LINK:</span>
+							<a href="https://github.com/l-snq" target="_blank" class="status-val" style="color:var(--cyan)">github.com/l-snq</a>
+						</div>
 					</div>
-
-					<div class="gui-mode" id="gui-mode">
-							<div class="ascii-art">
-    ███████ ███    ██  ██████
-    ██      ████   ██ ██    ██
-    ███████ ██ ██  ██ ██    ██
-         ██ ██  ██ ██ ██ ▄▄ ██
-    ███████ ██   ████  ██████
-                        ▀▀
-            </div>
-
-							<div class="gui-section">
-									<div class="gui-section-title">About Me</div>
-									<div class="gui-intro">
-											Hi. My name is SNQ. Welcome to my site.<br><br>
-											I am a programmer, modder and overall I love to tinker with things.
-											I have been programming since I was 14 years old. What started as
-											just making mods for a game quickly grew into an obsession with
-											building software.
-									</div>
-							</div>
-
-							<div class="gui-section">
-									<div class="gui-section-title">Projects</div>
-
-									<div class="project-card">
-											<div class="project-card-title">Tau</div>
-											<div class="project-card-tech">Rust, GTK4, Unix Development, CLI</div>
-											<div class="project-card-desc">A Rust app launcher for Linux systems, similar to Mac's spotlight search. Features custom CSS implementations for easy customization and optimized UI/UX with convenient keybinding shortcuts.</div>
-											<a href="https://github.com/l-snq/tau" class="project-card-link" target="_blank">View on GitHub →</a>
-									</div>
-
-									<div class="project-card">
-											<div class="project-card-title">RetroPaint Fork</div>
-											<div class="project-card-tech">Quality of Life Features</div>
-											<div class="project-card-desc">A fork of RetroPaint with additional QoL features for enhanced user experience.</div>
-											<a href="https://github.com/l-snq/retroPaint" class="project-card-link" target="_blank">View on GitHub →</a>
-									</div>
-
-									<div class="project-card">
-											<div class="project-card-title">Rust Game Engine</div>
-											<div class="project-card-tech">Rust, BevyRS</div>
-											<div class="project-card-desc">My prototype game engine written in Rust, exploring game development architecture and performance optimization.</div>
-											<a href="https://github.com/l-snq/dioxane/" class="project-card-link" target="_blank">View on GitHub →</a>
-									</div>
-
-									<div class="project-card">
-											<div class="project-card-title">Goods & Service Trader</div>
-											<div class="project-card-tech">DevelopEd 3.0 Hackathon</div>
-											<div class="project-card-desc">A trading application developed for the DevelopEd 3.0 Hackathon, focusing on goods and service exchange.</div>
-											<a href="https://github.com/l-snq/servicer-web-app" class="project-card-link" target="_blank">View on GitHub →</a>
-									</div>
-
-									<div class="project-card">
-											<div class="project-card-title">Porter</div>
-											<div class="project-card-tech">JS, React, Node</div>
-											<div class="project-card-desc">A YT-DL wrapper, no ads, no pop ups.</div>
-											<a href="https://github.com/l-snq/porter" class="project-card-link" target="_blank">View on GitHub →</a>
-									</div>
-
-									<div class="project-card">
-											<div class="project-card-title">VEC2K</div>
-											<div class="project-card-tech">Rust, WGPU, eGui</div>
-											<div class="project-card-desc">A free form vector paint brush app, dedicated to the early 2000s of UI design.</div>
-											<a href="https://www.linkedin.com/posts/jayden-tweedie_rustlang-graphicsprogramming-creativecoding-activity-7405154702260228099-eIlR" class="project-card-link" target="_blank">View on LinkedIn →</a>
-									</div>
-
-									<div class="project-card">
-											<div class="project-card-title">ADX</div>
-											<div class="project-card-tech">Rust, Tauri, Tesseract, Llama</div>
-											<div class="project-card-desc">An AI Driven Doc & Spec Reviewer that summarizes and compares large document sets for you.</div>
-											<a href="https://www.linkedin.com/posts/jayden-tweedie_hello-everyone-today-i-am-unveiling-adx-activity-7400087380591931392-qQSK" class="project-card-link" target="_blank">View on LinkedIn →</a>
-									</div>
-
-									<div class="project-card">
-											<div class="project-card-title">mini.ascii</div>
-											<div class="project-card-tech">Web, ASCII Art</div>
-											<div class="project-card-desc">A minimalist ASCII art drawing tool with a simple grid-based canvas for creating text-based artwork in the browser.</div>
-											<a href="https://miniascii.netlify.app" class="project-card-link" target="_blank">View Project →</a>
-									</div>
-							</div>
-
-							<div class="gui-section">
-									<div class="gui-section-title">Professional Experience</div>
-
-									<div class="experience-card">
-											<div class="experience-card-title">Full Stack Developer/Lead Estimator</div>
-											<div class="experience-card-company">Leading Electrical & Instrumentation Contractor</div>
-											<div class="experience-card-date">2024 - Present</div>
-											<div class="experience-card-desc">Leading Electrical and Instrumentation and Building control estimates for commercial and industrial projects, and building integrated software solutions for the transfer of meta data between Bluebeam, Accubid, and Kahua.</div>
-									</div>
-
-									<div class="experience-card">
-											<div class="experience-card-title">Full Stack Developer</div>
-											<div class="experience-card-company">Enterprise Testing & Analytics Platform</div>
-											<div class="experience-card-date">2020 - Present</div>
-											<div class="experience-card-desc">Lead UI development and component functionality using Vue and Flask Python. Reduced serverside compilation time by 5ms with optimizations to dependency loading and removal of redundancies.</div>
-									</div>
-
-									<div class="experience-card">
-											<div class="experience-card-title">Junior Full Stack Developer</div>
-											<div class="experience-card-company">Healthcare Technology Company</div>
-											<div class="experience-card-date">2022-2023</div>
-											<div class="experience-card-desc">Upgraded React web application from React 17 to 18, implemented large-scale features for mobile app, and managed database updates with React, React Native, Typescript, CSharp ASP .NET, and Azure DevOps.</div>
-									</div>
-
-									<div class="experience-card">
-											<div class="experience-card-title">Software Developer</div>
-											<div class="experience-card-company">Open Source Game Server Project</div>
-											<div class="experience-card-date">2021</div>
-											<div class="experience-card-desc">Contributed to a FOSS project that implements server solutions for video game protocols using C, worked on fixing bugs with packet losses, and further strengthened synchronization between server and client.</div>
-									</div>
-							</div>
-
-							<div class="gui-section">
-									<div class="gui-section-title">Technical Skills</div>
-
-									<div class="skills-container">
-											<div class="skill-card">
-													<div class="skill-card-title">Languages</div>
-													<div class="skill-card-content">C#, Ruby, Rust, TypeScript, JavaScript, Python, Lua, HTML/CSS, LaTeX, C</div>
-											</div>
-
-											<div class="skill-card">
-													<div class="skill-card-title">Tools</div>
-													<div class="skill-card-content">Git/GitHub, Unix Shell, Webpack, Node.js, VS Code, Neovim, Visual Studio, CLI, Docker</div>
-											</div>
-
-											<div class="skill-card">
-													<div class="skill-card-title">Frameworks</div>
-													<div class="skill-card-content">React/React Native, Ruby On Rails, Node.js, Next.js, Angular, ASP.NET, BevyRS, AntD UI, Material-UI, Svelte, FastAPI</div>
-											</div>
-
-											<div class="skill-card">
-													<div class="skill-card-title">Education</div>
-													<div class="skill-card-content">Certificate in Software Development<br>Accredited Canadian Technical Institute (2021)</div>
-											</div>
-									</div>
-							</div>
-
-							<div class="gui-section">
-									<div class="gui-section-title">Contact</div>
-
-									<div class="contact-card">
-											<strong>GitHub:</strong> <a href="https://github.com/l-snq" class="contact-link" target="_blank">github.com/l-snq</a>
-									</div>
-							</div>
-					</div>
+				</div>
+				<div class="about-detail">
+					<p>Hi. My name is SNQ. Programmer, modder, and tinkerer. Started writing code at 14 — what began as game mods grew into an obsession with building real software.</p>
+					<p>I work across the full stack. Rust for systems and performance-critical tools. TypeScript and React for the web layer. C# when the enterprise demands it. Most alive when the constraints are real and the answer isn't obvious.</p>
+					<p>Currently building integrated software solutions and leading technical estimates for large-scale electrical and instrumentation projects.</p>
+				</div>
 			</div>
+		</div>
+	</div>
+</div>
 
-			<div class="game-container" id="game-container">
-					<canvas id="game-canvas" width="800" height="600"></canvas>
-					<div class="game-ui">
-							<div id="game-stats">
-									<p>SCORE: <span id="game-score">0</span> | HEALTH: <span id="game-health">100</span></p>
-							</div>
-							<div class="game-controls">
-									<p>WASD/ARROWS: Move | SPACE: Shoot | ESC: Quit</p>
-							</div>
-					</div>
-					<div class="game-over-screen" id="game-over-screen">
-							<h2>GAME OVER</h2>
-							<p>FINAL SCORE: <span id="final-score">0</span></p>
-							<p>Press ENTER to return to terminal</p>
-					</div>
+<!-- ── SYS-02: PROJECTS ── -->
+<div class="panel-wrap reveal" id="projects">
+	<div class="panel">
+		<div class="panel-hdr">
+			<div class="panel-dot"></div>
+			<span class="panel-id">SYS-02</span>
+			<span class="panel-sep">//</span>
+			<span class="panel-title">PROJECT REGISTRY</span>
+			<span class="panel-jp">プロジェクト登録</span>
+			<span class="panel-status">[ 8 ENTRIES ]</span>
+		</div>
+		<div class="panel-body">
+			<div class="projects-grid">
+
+				<a href="https://github.com/l-snq/tau" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-01 // LINUX</div>
+					<div class="proj-name">TAU</div>
+					<div class="proj-stack">RUST // GTK4 // UNIX // CLI</div>
+					<div class="proj-desc">App launcher for Linux systems — Spotlight, but for people who live in the terminal. Custom CSS theming, keybinding shortcuts, optimized UX.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
+				<a href="https://www.linkedin.com/posts/jayden-tweedie_hello-everyone-today-i-am-unveiling-adx-activity-7400087380591931392-qQSK" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-02 // AI TOOLS</div>
+					<div class="proj-name">ADX</div>
+					<div class="proj-stack">RUST // TAURI // TESSERACT // LLAMA</div>
+					<div class="proj-desc">AI-powered document &amp; spec reviewer. Summarizes and compares large document sets using on-device LLM inference.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
+				<a href="https://www.linkedin.com/posts/jayden-tweedie_rustlang-graphicsprogramming-creativecoding-activity-7405154702260228099-eIlR" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-03 // GRAPHICS</div>
+					<div class="proj-name">VEC2K</div>
+					<div class="proj-stack">RUST // WGPU // EGUI</div>
+					<div class="proj-desc">Freeform vector paint app dedicated to the early-2000s aesthetic. GPU-accelerated rendering, pixel-perfect tooling.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
+				<a href="https://github.com/l-snq/dioxane/" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-04 // ENGINE</div>
+					<div class="proj-name">RUST GAME ENGINE</div>
+					<div class="proj-stack">RUST // BEVYRS</div>
+					<div class="proj-desc">Prototype game engine — exploring architecture patterns and performance tradeoffs at the systems level.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
+				<a href="https://miniascii.netlify.app" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-05 // WEB TOOL</div>
+					<div class="proj-name">MINI.ASCII</div>
+					<div class="proj-stack">WEB // CANVAS</div>
+					<div class="proj-desc">Minimalist ASCII art drawing tool. Grid-based canvas, runs in the browser, zero dependencies.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
+				<a href="https://github.com/l-snq/porter" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-06 // UTILITY</div>
+					<div class="proj-name">PORTER</div>
+					<div class="proj-stack">JS // REACT // NODE</div>
+					<div class="proj-desc">Clean YT-DL wrapper. No ads, no popups, no garbage. Just the file you want.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
+				<a href="https://github.com/l-snq/retroPaint" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-07 // FORK</div>
+					<div class="proj-name">RETROPAINT FORK</div>
+					<div class="proj-stack">QoL FEATURES</div>
+					<div class="proj-desc">Fork of RetroPaint with quality-of-life improvements and extended feature set.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
+				<a href="https://github.com/l-snq/servicer-web-app" target="_blank" class="proj-card">
+					<div class="proj-num">PROJECT-08 // HACKATHON</div>
+					<div class="proj-name">GOODS &amp; SERVICE TRADER</div>
+					<div class="proj-stack">DEVELOPED 3.0 HACKATHON</div>
+					<div class="proj-desc">Trading application built for DevelopEd 3.0 Hackathon. Goods and service exchange platform.</div>
+					<span class="proj-link">ACCESS FILE →</span>
+				</a>
+
 			</div>
-
-			<script>
-					document.addEventListener('DOMContentLoaded', function() {
-							const terminalInput = document.getElementById('terminal-input');
-							const terminalOutput = document.getElementById('terminal-output');
-							const terminalMode = document.getElementById('terminal-mode');
-							const guiMode = document.getElementById('gui-mode');
-							const modeToggle = document.getElementById('mode-toggle');
-							let commandHistory = [];
-							let historyIndex = -1;
-							let isGuiMode = false;
-							let effectsEnabled = true; // Global flag for effects toggle
-
-							// Typewriter effect function (FAST: 20ms per character)
-							async function typewriterEffect(element, html, speed = 20) {
-									// Skip if effects disabled
-									if (!effectsEnabled) {
-											element.innerHTML = html;
-											return Promise.resolve();
-									}
-
-									return new Promise(resolve => {
-											// Create temporary element to parse HTML
-											const temp = document.createElement('div');
-											temp.innerHTML = html;
-
-											// Extract text content while preserving structure
-											const textContent = temp.textContent || temp.innerText;
-
-											element.innerHTML = '';
-											let index = 0;
-
-											// For complex HTML, we need different approach
-											if (html.includes('<a') || html.includes('<span')) {
-													// Display HTML instantly but with reveal effect
-													element.innerHTML = html;
-													element.style.opacity = '0';
-													requestAnimationFrame(() => {
-															element.style.transition = 'opacity 0.3s';
-															element.style.opacity = '1';
-													});
-													setTimeout(resolve, 300);
-											} else {
-													// Simple text typewriter
-													const interval = setInterval(() => {
-															if (index < textContent.length) {
-																	element.textContent = textContent.substring(0, index + 1);
-																	index++;
-															} else {
-																	clearInterval(interval);
-																	element.innerHTML = html; // Restore full HTML
-																	resolve();
-															}
-													}, speed);
-											}
-									});
-							}
-
-							// Mode toggle functionality
-							modeToggle.addEventListener('click', function() {
-									isGuiMode = !isGuiMode;
-
-									if (isGuiMode) {
-											terminalMode.classList.add('hidden');
-											guiMode.classList.add('active');
-											modeToggle.textContent = 'Switch to Terminal Mode';
-									} else {
-											terminalMode.classList.remove('hidden');
-											guiMode.classList.remove('active');
-											modeToggle.textContent = 'Switch to GUI Mode';
-											terminalInput.focus();
-									}
-							});
-
-							// Portfolio data
-							const portfolioData = {
-									whoami: `Hi. My name is SNQ. I notice software that should exist but doesn't, then I build it. AI-powered spec analysis for contractors. A vector editor that's actually fast. Tools for problems people have learned to tolerate.
-Rust, TypeScript, C#; whatever fits. Programming since 14. I like understanding the machine.`,
-
-									projects: [
-											{
-													name: 'Tau',
-													url: 'https://github.com/l-snq/tau',
-													tech: 'Rust, GTK4, Unix Development, CLI',
-													desc: 'A Rust app launcher for Linux systems, similar to Mac\'s spotlight search. Features custom CSS implementations for easy customization and optimized UI/UX with convenient keybinding shortcuts.'
-											},
-											{
-													name: 'RetroPaint Fork',
-													url: 'https://github.com/l-snq/retroPaint',
-													tech: 'Quality of Life Features',
-													desc: 'A fork of RetroPaint with additional QoL features for enhanced user experience.'
-											},
-											{
-													name: 'Rust Game Engine',
-													url: 'https://github.com/l-snq/dioxane/',
-													tech: 'Rust, BevyRS',
-													desc: 'My prototype game engine written in Rust, exploring game development architecture and performance optimization.'
-											},
-											{
-													name: 'Goods & Service Trader',
-													url: 'https://github.com/l-snq/servicer-web-app',
-													tech: 'DevelopEd 3.0 Hackathon',
-													desc: 'A trading application developed for the DevelopEd 3.0 Hackathon, focusing on goods and service exchange.'
-											},
-											{
-													name: 'Porter',
-													url: 'https://github.com/l-snq/porter',
-													tech: 'JS, React, Node',
-													desc: 'A YT-DL wrapper, no ads, no pop ups.'
-											},
-											{
-													name: 'VEC2K',
-													url: 'https://www.linkedin.com/posts/jayden-tweedie_rustlang-graphicsprogramming-creativecoding-activity-7405154702260228099-eIlR',
-													tech: 'Rust, WGPU, eGui',
-													desc: 'A free form vector paint brush app, dedicated to the early 2000s of UI design.'
-											},
-											{
-													name: 'ADX',
-													url: 'https://www.linkedin.com/posts/jayden-tweedie_hello-everyone-today-i-am-unveiling-adx-activity-7400087380591931392-qQSK',
-													tech: 'Rust, Tauri, Tesseract, Llama',
-													desc: 'An AI Driven Doc & Spec Reviewer that summarizes and compares large document sets for you.'
-											},
-											{
-													name: 'mini.ascii',
-													url: 'https://miniascii.netlify.app',
-													tech: 'Web, ASCII Art',
-													desc: 'A minimalist ASCII art drawing tool with a simple grid-based canvas for creating text-based artwork in the browser.'
-											}
-									],
-
-									experience: [
-											{
-													title: 'Full Stack Developer/Lead Estimator',
-													company: 'Leading Electrical & Instrumentation Contractor',
-													date: '2024 - Present',
-													desc: 'Leading Electrical and Instrumentation and Building control estimates for commercial and industrial projects, and building integrated software solutions for the transfer of meta data between Bluebeam, Accubid, and Kahua.'
-											},
-											{
-													title: 'Full Stack Developer',
-													company: 'Enterprise Testing & Analytics Platform',
-													date: '2020 - Present',
-													desc: 'Lead UI development and component functionality using Vue and Flask Python. Reduced serverside compilation time by 5ms with optimizations to dependency loading and removal of redundancies.'
-											},
-											{
-													title: 'Junior Full Stack Developer',
-													company: 'Healthcare Technology Company',
-													date: '2022-2023',
-													desc: 'Upgraded React web application from React 17 to 18, implemented large-scale features for mobile app, and managed database updates with React, React Native, Typescript, CSharp ASP .NET, and Azure DevOps.'
-											},
-											{
-													title: 'Software Developer',
-													company: 'Open Source Game Server Project',
-													date: '2021',
-													desc: 'Contributed to a FOSS project that implements server solutions for video game protocols using C, worked on fixing bugs with packet losses, and further strengthened synchronization between server and client.'
-											}
-									],
-
-									skills: {
-											'Languages': 'C#, Ruby, Rust, TypeScript, JavaScript, Python, Lua, HTML/CSS, LaTeX, C',
-											'Tools': 'Git/GitHub, Unix Shell, Webpack, Node.js, VS Code, Neovim, Visual Studio, CLI, Docker',
-											'Frameworks': 'React/React Native, Ruby On Rails, Node.js, Next.js, Angular, ASP.NET, BevyRS, AntD UI, Material-UI, Svelte, FastAPI',
-											'Education': 'Certificate in Software Development - Accredited Canadian Technical Institute (2021)'
-									},
-
-									contact: {
-											github: 'https://github.com/l-snq'
-									}
-							};
-
-							// Command handlers
-							const commands = {
-									help: () => {
-											return `Available commands:
-  help        - Display this help message
-  whoami      - About me
-  ls          - List projects
-  projects    - View all projects
-  experience  - View work experience
-  skills      - View technical skills
-  contact     - View contact information
-  effects     - Toggle visual effects (CRT flicker, typewriter)
-  clear       - Clear terminal screen
-  game        - Launch isometric shooter game`;
-									},
-
-									game: () => {
-											startGame();
-											return null;
-									},
-
-									whoami: () => portfolioData.whoami,
-
-									ls: () => {
-											let output = 'PROJECTS:\n\n';
-											portfolioData.projects.forEach((proj, idx) => {
-													output += `  [${idx + 1}] ${proj.name}\n`;
-											});
-											output += '\nUse "projects" to see full details.';
-											return output;
-									},
-
-									projects: () => {
-											let output = 'MY PORTFOLIO:\n\n';
-											portfolioData.projects.forEach((proj, idx) => {
-													output += `[${idx + 1}] ${proj.name}\n`;
-													output += `    URL: <a href="${proj.url}" class="project-link" target="_blank">${proj.url}</a>\n`;
-													output += `    Tech: ${proj.tech}\n`;
-													output += `    ${proj.desc}\n\n`;
-											});
-											return output;
-									},
-
-									experience: () => {
-											let output = 'PROFESSIONAL EXPERIENCE:\n\n';
-											portfolioData.experience.forEach((exp, idx) => {
-													output += `[${idx + 1}] ${exp.title}\n`;
-													output += `    Company: ${exp.company}\n`;
-													output += `    Period: ${exp.date}\n`;
-													output += `    ${exp.desc}\n\n`;
-											});
-											return output;
-									},
-
-									skills: () => {
-											let output = 'TECHNICAL SKILLS:\n\n';
-											for (const [category, items] of Object.entries(portfolioData.skills)) {
-													output += `${category}:\n  ${items}\n\n`;
-											}
-											return output;
-									},
-
-									contact: () => {
-											return `CONTACT INFORMATION:
-
-GitHub: <a href="${portfolioData.contact.github}" class="contact-info" target="_blank">${portfolioData.contact.github}</a>`;
-									},
-
-									clear: () => {
-											terminalOutput.innerHTML = '';
-											return null;
-									},
-
-									effects: () => {
-											effectsEnabled = !effectsEnabled;
-											const container = document.querySelector('.terminal-container');
-											const content = document.querySelector('.terminal-content');
-
-											if (!effectsEnabled) {
-													// Disable CRT effects
-													container.style.animation = 'none';
-													content.style.animation = 'none';
-													return 'Visual effects disabled.';
-											} else {
-													// Enable CRT effects
-													container.style.animation = '';
-													content.style.animation = '';
-													return 'Visual effects enabled.';
-											}
-									}
-							};
-
-							// Add output to terminal (async for typewriter effect)
-							async function addOutput(command, output) {
-									const cmdLine = document.createElement('div');
-									cmdLine.className = 'output';
-									cmdLine.innerHTML = `<span class="prompt">lsnq@portfolio:~$</span> <span class="command">${escapeHtml(command)}</span>`;
-									terminalOutput.appendChild(cmdLine);
-
-									if (output !== null) {
-											const outputDiv = document.createElement('div');
-											outputDiv.className = 'output';
-											outputDiv.style.whiteSpace = 'pre-line';
-											terminalOutput.appendChild(outputDiv);
-
-											// Apply typewriter effect
-											await typewriterEffect(outputDiv, output, 20);
-									}
-
-									// Scroll to bottom
-									terminalOutput.scrollTop = terminalOutput.scrollHeight;
-							}
-
-							// Escape HTML
-							function escapeHtml(text) {
-									const div = document.createElement('div');
-									div.textContent = text;
-									return div.innerHTML;
-							}
-
-							// Process command (async for typewriter effect)
-							async function processCommand(input) {
-									const cmd = input.trim().toLowerCase();
-
-									if (cmd === '') return;
-
-									commandHistory.unshift(input);
-									historyIndex = -1;
-
-									if (commands[cmd]) {
-											const output = commands[cmd]();
-											await addOutput(input, output);
-									} else {
-											await addOutput(input, `<span class="error">Bad command or file name: ${escapeHtml(cmd)}</span>`);
-									}
-							}
-
-							// Handle input (async for typewriter effect)
-							terminalInput.addEventListener('keydown', async function(e) {
-									if (e.key === 'Enter') {
-											e.preventDefault();
-											const input = terminalInput.value;
-											await processCommand(input);
-											terminalInput.value = '';
-									} else if (e.key === 'ArrowUp') {
-											e.preventDefault();
-											if (historyIndex < commandHistory.length - 1) {
-													historyIndex++;
-													terminalInput.value = commandHistory[historyIndex];
-											}
-									} else if (e.key === 'ArrowDown') {
-											e.preventDefault();
-											if (historyIndex > 0) {
-													historyIndex--;
-													terminalInput.value = commandHistory[historyIndex];
-											} else {
-													historyIndex = -1;
-													terminalInput.value = '';
-											}
-									}
-							});
-
-							// Keep input focused (only in terminal mode)
-							document.addEventListener('click', function() {
-									if (!isGuiMode) {
-											terminalInput.focus();
-									}
-							});
-
-							// ========== ISOMETRIC SHOOTER GAME ==========
-							function startGame() {
-									const gameContainer = document.getElementById('game-container');
-									const canvas = document.getElementById('game-canvas');
-									const ctx = canvas.getContext('2d');
-									const gameOverScreen = document.getElementById('game-over-screen');
-									const scoreDisplay = document.getElementById('game-score');
-									const healthDisplay = document.getElementById('game-health');
-									const finalScoreDisplay = document.getElementById('final-score');
-
-									gameContainer.classList.add('active');
-
-									// Game state
-									let gameRunning = true;
-									let score = 0;
-									let health = 100;
-									let lastTime = 0;
-									let enemySpawnTimer = 0;
-
-									// Reset UI displays
-									scoreDisplay.textContent = '0';
-									healthDisplay.textContent = '100';
-
-									// Isometric conversion helpers
-									function toIso(x, y) {
-											return {
-													x: (x - y) * 2,
-													y: (x + y)
-											};
-									}
-
-									// Player
-									const player = {
-											x: 0,
-											y: 0,
-											size: 20,
-											speed: 1.5,
-											color: '#ff8c00'
-									};
-
-									// Input state
-									const keys = {};
-									let shootCooldown = 0;
-
-									// Game objects
-									const bullets = [];
-									const enemies = [];
-									const particles = [];
-
-									// Enemy class
-									class Enemy {
-											constructor(x, y) {
-													this.x = x;
-													this.y = y;
-													this.size = 15;
-													this.speed = 0.8;
-													this.health = 2;
-													this.color = '#cc3300';
-											}
-
-											update() {
-													const dx = player.x - this.x;
-													const dy = player.y - this.y;
-													const dist = Math.sqrt(dx * dx + dy * dy);
-
-													if (dist > 1) {
-															this.x += (dx / dist) * this.speed;
-															this.y += (dy / dist) * this.speed;
-													}
-											}
-
-											draw() {
-													const iso = toIso(this.x, this.y);
-													// Draw shadow
-													ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-													ctx.beginPath();
-													ctx.ellipse(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y + 10, this.size * 0.8, this.size * 0.4, 0, 0, Math.PI * 2);
-													ctx.fill();
-
-													// Draw enemy (cube)
-													ctx.fillStyle = this.color;
-													const h = this.size * 1.5;
-													ctx.beginPath();
-													// Top face
-													ctx.moveTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h);
-													ctx.lineTo(canvas.width / 2 + iso.x + this.size, canvas.height / 2 + iso.y - h + this.size * 0.5);
-													ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h + this.size);
-													ctx.lineTo(canvas.width / 2 + iso.x - this.size, canvas.height / 2 + iso.y - h + this.size * 0.5);
-													ctx.closePath();
-													ctx.fill();
-													// Left face
-													ctx.fillStyle = '#991100';
-													ctx.beginPath();
-													ctx.moveTo(canvas.width / 2 + iso.x - this.size, canvas.height / 2 + iso.y - h + this.size * 0.5);
-													ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h + this.size);
-													ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y + this.size * 0.5);
-													ctx.lineTo(canvas.width / 2 + iso.x - this.size, canvas.height / 2 + iso.y);
-													ctx.closePath();
-													ctx.fill();
-													// Right face
-													ctx.fillStyle = '#aa2200';
-													ctx.beginPath();
-													ctx.moveTo(canvas.width / 2 + iso.x + this.size, canvas.height / 2 + iso.y - h + this.size * 0.5);
-													ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h + this.size);
-													ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y + this.size * 0.5);
-													ctx.lineTo(canvas.width / 2 + iso.x + this.size, canvas.height / 2 + iso.y);
-													ctx.closePath();
-													ctx.fill();
-											}
-									}
-
-									// Bullet class
-									class Bullet {
-											constructor(x, y, dirX, dirY) {
-													this.x = x;
-													this.y = y;
-													this.dirX = dirX;
-													this.dirY = dirY;
-													this.speed = 5;
-													this.size = 5;
-													this.color = '#ffaa33';
-													this.lifetime = 100;
-											}
-
-											update() {
-													this.x += this.dirX * this.speed;
-													this.y += this.dirY * this.speed;
-													this.lifetime--;
-											}
-
-											draw() {
-													const iso = toIso(this.x, this.y);
-													ctx.fillStyle = this.color;
-													ctx.beginPath();
-													ctx.arc(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y, this.size, 0, Math.PI * 2);
-													ctx.fill();
-											}
-									}
-
-									// Particle class for sparks
-									class Particle {
-											constructor(x, y) {
-													this.x = x;
-													this.y = y;
-													this.z = 0;
-													this.vx = (Math.random() - 0.5) * 4;
-													this.vy = (Math.random() - 0.5) * 4;
-													this.vz = Math.random() * 3 + 2;
-													this.gravity = 0.2;
-													this.size = Math.random() * 3 + 2;
-													this.lifetime = 30;
-													this.maxLifetime = 30;
-													this.color = ['#ff8c00', '#ffaa33', '#ffc266', '#cc7000'][Math.floor(Math.random() * 4)];
-											}
-
-											update() {
-													this.x += this.vx;
-													this.y += this.vy;
-													this.z += this.vz;
-													this.vz -= this.gravity;
-													this.lifetime--;
-
-													// Bounce off ground
-													if (this.z <= 0 && this.vz < 0) {
-															this.z = 0;
-															this.vz *= -0.5;
-															this.vx *= 0.7;
-															this.vy *= 0.7;
-													}
-											}
-
-											draw() {
-													const iso = toIso(this.x, this.y);
-													const alpha = this.lifetime / this.maxLifetime;
-													ctx.fillStyle = this.color;
-													ctx.globalAlpha = alpha;
-
-													// Draw as small cube
-													const s = this.size;
-													const h = this.z;
-													ctx.beginPath();
-													// Top face
-													ctx.moveTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h);
-													ctx.lineTo(canvas.width / 2 + iso.x + s, canvas.height / 2 + iso.y - h + s * 0.5);
-													ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h + s);
-													ctx.lineTo(canvas.width / 2 + iso.x - s, canvas.height / 2 + iso.y - h + s * 0.5);
-													ctx.closePath();
-													ctx.fill();
-
-													ctx.globalAlpha = 1;
-											}
-									}
-
-									// Draw player
-									function drawPlayer() {
-											const iso = toIso(player.x, player.y);
-											// Draw shadow
-											ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-											ctx.beginPath();
-											ctx.ellipse(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y + 12, player.size, player.size * 0.5, 0, 0, Math.PI * 2);
-											ctx.fill();
-
-											// Draw player (pyramid)
-											ctx.fillStyle = player.color;
-											const h = player.size * 2;
-											ctx.beginPath();
-											// Front left face
-											ctx.moveTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h);
-											ctx.lineTo(canvas.width / 2 + iso.x - player.size, canvas.height / 2 + iso.y);
-											ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y + player.size * 0.5);
-											ctx.closePath();
-											ctx.fill();
-											// Front right face
-											ctx.fillStyle = '#cc7000';
-											ctx.beginPath();
-											ctx.moveTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y - h);
-											ctx.lineTo(canvas.width / 2 + iso.x + player.size, canvas.height / 2 + iso.y);
-											ctx.lineTo(canvas.width / 2 + iso.x, canvas.height / 2 + iso.y + player.size * 0.5);
-											ctx.closePath();
-											ctx.fill();
-									}
-
-									// Draw grid
-									function drawGrid() {
-											ctx.strokeStyle = 'rgba(255, 140, 0, 0.1)';
-											ctx.lineWidth = 1;
-											const gridSize = 50;
-											for (let x = -400; x <= 400; x += gridSize) {
-													for (let y = -400; y <= 400; y += gridSize) {
-															const iso1 = toIso(x, y);
-															const iso2 = toIso(x + gridSize, y);
-															const iso3 = toIso(x, y + gridSize);
-															ctx.beginPath();
-															ctx.moveTo(canvas.width / 2 + iso1.x, canvas.height / 2 + iso1.y);
-															ctx.lineTo(canvas.width / 2 + iso2.x, canvas.height / 2 + iso2.y);
-															ctx.stroke();
-															ctx.beginPath();
-															ctx.moveTo(canvas.width / 2 + iso1.x, canvas.height / 2 + iso1.y);
-															ctx.lineTo(canvas.width / 2 + iso3.x, canvas.height / 2 + iso3.y);
-															ctx.stroke();
-													}
-											}
-									}
-
-									// Update game
-									function update(deltaTime) {
-											if (!gameRunning) return;
-
-											// Player movement
-											let moveX = 0;
-											let moveY = 0;
-											if (keys['w'] || keys['ArrowUp']) moveY -= 1;
-											if (keys['s'] || keys['ArrowDown']) moveY += 1;
-											if (keys['a'] || keys['ArrowLeft']) moveX -= 1;
-											if (keys['d'] || keys['ArrowRight']) moveX += 1;
-
-											// Normalize diagonal movement
-											if (moveX !== 0 && moveY !== 0) {
-													moveX *= 0.707;
-													moveY *= 0.707;
-											}
-
-											player.x += moveX * player.speed;
-											player.y += moveY * player.speed;
-
-											// Keep player in bounds
-											player.x = Math.max(-300, Math.min(300, player.x));
-											player.y = Math.max(-300, Math.min(300, player.y));
-
-											// Shooting
-											shootCooldown -= deltaTime;
-											if (keys[' '] && shootCooldown <= 0) {
-													// Shoot in 4 directions
-													bullets.push(new Bullet(player.x, player.y, 0, -1));
-													bullets.push(new Bullet(player.x, player.y, 0, 1));
-													bullets.push(new Bullet(player.x, player.y, -1, 0));
-													bullets.push(new Bullet(player.x, player.y, 1, 0));
-													shootCooldown = 300;
-											}
-
-											// Update bullets
-											for (let i = bullets.length - 1; i >= 0; i--) {
-													bullets[i].update();
-													if (bullets[i].lifetime <= 0) {
-															bullets.splice(i, 1);
-													}
-											}
-
-											// Update particles
-											for (let i = particles.length - 1; i >= 0; i--) {
-													particles[i].update();
-													if (particles[i].lifetime <= 0) {
-															particles.splice(i, 1);
-													}
-											}
-
-											// Spawn enemies
-											enemySpawnTimer += deltaTime;
-											if (enemySpawnTimer > 1000) {
-													const angle = Math.random() * Math.PI * 2;
-													const distance = 400;
-													enemies.push(new Enemy(
-															Math.cos(angle) * distance,
-															Math.sin(angle) * distance
-													));
-													enemySpawnTimer = 0;
-											}
-
-											// Update enemies
-											for (let i = enemies.length - 1; i >= 0; i--) {
-													enemies[i].update();
-
-													// Check collision with player (smaller hitbox)
-													const dx = player.x - enemies[i].x;
-													const dy = player.y - enemies[i].y;
-													const dist = Math.sqrt(dx * dx + dy * dy);
-													if (dist < (player.size + enemies[i].size) * 0.6) {
-															health -= 10;
-															healthDisplay.textContent = health;
-															enemies.splice(i, 1);
-															if (health <= 0) {
-																	endGame();
-															}
-															continue;
-													}
-
-													// Check collision with bullets (smaller hitbox)
-													for (let j = bullets.length - 1; j >= 0; j--) {
-															const bdx = bullets[j].x - enemies[i].x;
-															const bdy = bullets[j].y - enemies[i].y;
-															const bdist = Math.sqrt(bdx * bdx + bdy * bdy);
-															if (bdist < enemies[i].size * 0.8) {
-																	enemies[i].health--;
-
-																	// Create spark particles at impact point
-																	for (let p = 0; p < 6; p++) {
-																			particles.push(new Particle(bullets[j].x, bullets[j].y));
-																	}
-
-																	bullets.splice(j, 1);
-																	if (enemies[i].health <= 0) {
-																			score += 10;
-																			scoreDisplay.textContent = score;
-																			enemies.splice(i, 1);
-																			break;
-																	}
-															}
-													}
-											}
-									}
-
-									// Draw game
-									function draw() {
-											ctx.fillStyle = '#000000';
-											ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-											drawGrid();
-											drawPlayer();
-
-											bullets.forEach(b => b.draw());
-											enemies.forEach(e => e.draw());
-											particles.forEach(p => p.draw());
-									}
-
-									// Game loop
-									function gameLoop(timestamp) {
-											if (!gameRunning) return;
-
-											const deltaTime = timestamp - lastTime;
-											lastTime = timestamp;
-
-											update(deltaTime);
-											draw();
-
-											requestAnimationFrame(gameLoop);
-									}
-
-									// End game
-									function endGame() {
-											gameRunning = false;
-											gameOverScreen.classList.add('active');
-											finalScoreDisplay.textContent = score;
-									}
-
-									// Input handlers
-									function handleKeyDown(e) {
-											if (!gameRunning && e.key === 'Enter') {
-													gameContainer.classList.remove('active');
-													gameOverScreen.classList.remove('active');
-													terminalInput.focus();
-													document.removeEventListener('keydown', handleKeyDown);
-													document.removeEventListener('keyup', handleKeyUp);
-													return;
-											}
-
-											if (e.key === 'Escape') {
-													gameRunning = false;
-													gameContainer.classList.remove('active');
-													terminalInput.focus();
-													document.removeEventListener('keydown', handleKeyDown);
-													document.removeEventListener('keyup', handleKeyUp);
-													return;
-											}
-
-											// Prevent default behavior for game keys
-											if (['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-													e.preventDefault();
-											}
-
-											keys[e.key] = true;
-									}
-
-									function handleKeyUp(e) {
-											// Prevent default behavior for game keys
-											if (['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-													e.preventDefault();
-											}
-
-											keys[e.key] = false;
-									}
-
-									document.addEventListener('keydown', handleKeyDown);
-									document.addEventListener('keyup', handleKeyUp);
-
-									// Start game loop
-									requestAnimationFrame(gameLoop);
-							}
-					});
-			</script>	</body>
+		</div>
+	</div>
+</div>
+
+<!-- ── SYS-03: EXPERIENCE ── -->
+<div class="panel-wrap reveal" id="experience">
+	<div class="panel">
+		<div class="panel-hdr">
+			<div class="panel-dot"></div>
+			<span class="panel-id">SYS-03</span>
+			<span class="panel-sep">//</span>
+			<span class="panel-title">OPERATIONAL LOG</span>
+			<span class="panel-jp">作戦記録</span>
+			<span class="panel-status">[ 4 ENTRIES ]</span>
+		</div>
+		<div class="panel-body">
+			<div class="exp-list">
+
+				<div class="exp-item">
+					<div class="exp-left">
+						<div class="exp-date">2024 — PRESENT</div>
+						<div class="exp-co">Leading Electrical &amp; Instrumentation Contractor</div>
+					</div>
+					<div>
+						<div class="exp-title">FULL STACK DEVELOPER // LEAD ESTIMATOR</div>
+						<div class="exp-desc">Leading electrical and instrumentation estimates for commercial and industrial projects. Building integrated software for metadata transfer between Bluebeam, Accubid, and Kahua.</div>
+					</div>
+				</div>
+
+				<div class="exp-item">
+					<div class="exp-left">
+						<div class="exp-date">2020 — PRESENT</div>
+						<div class="exp-co">Enterprise Testing &amp; Analytics Platform</div>
+					</div>
+					<div>
+						<div class="exp-title">FULL STACK DEVELOPER</div>
+						<div class="exp-desc">Lead UI development using Vue and Flask Python. Reduced server-side compilation time by 5ms through dependency optimization and redundancy removal.</div>
+					</div>
+				</div>
+
+				<div class="exp-item">
+					<div class="exp-left">
+						<div class="exp-date">2022 — 2023</div>
+						<div class="exp-co">Healthcare Technology Company</div>
+					</div>
+					<div>
+						<div class="exp-title">JUNIOR FULL STACK DEVELOPER</div>
+						<div class="exp-desc">Upgraded React 17 to 18. Implemented large-scale mobile features. Managed database updates across React Native, TypeScript, C# ASP.NET, and Azure DevOps.</div>
+					</div>
+				</div>
+
+				<div class="exp-item">
+					<div class="exp-left">
+						<div class="exp-date">2021</div>
+						<div class="exp-co">Open Source Game Server Project</div>
+					</div>
+					<div>
+						<div class="exp-title">SOFTWARE DEVELOPER</div>
+						<div class="exp-desc">Contributed to a FOSS project implementing server solutions for video game protocols in C. Fixed packet loss bugs, strengthened server-client synchronization.</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ── SYS-04: SKILLS ── -->
+<div class="panel-wrap reveal" id="skills">
+	<div class="panel">
+		<div class="panel-hdr">
+			<div class="panel-dot"></div>
+			<span class="panel-id">SYS-04</span>
+			<span class="panel-sep">//</span>
+			<span class="panel-title">SUBSYSTEM STATUS</span>
+			<span class="panel-jp">サブシステム</span>
+			<span class="panel-status">[ ALL NOMINAL ]</span>
+		</div>
+		<div class="panel-body">
+			<div class="skills-grid">
+
+				<div class="sub-panel">
+					<div class="sub-panel-hdr">SYS: LANGUAGES</div>
+					<div class="sub-panel-body">
+						<div class="skill-tags">
+							<span class="stag">Rust</span><span class="stag">TypeScript</span>
+							<span class="stag">JavaScript</span><span class="stag">C#</span>
+							<span class="stag">Python</span><span class="stag">Ruby</span>
+							<span class="stag">C</span><span class="stag">Lua</span>
+							<span class="stag">HTML/CSS</span><span class="stag">LaTeX</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="sub-panel">
+					<div class="sub-panel-hdr">SYS: FRAMEWORKS</div>
+					<div class="sub-panel-body">
+						<div class="skill-tags">
+							<span class="stag">React</span><span class="stag">React Native</span>
+							<span class="stag">Next.js</span><span class="stag">Vue</span>
+							<span class="stag">Svelte</span><span class="stag">Angular</span>
+							<span class="stag">ASP.NET</span><span class="stag">Rails</span>
+							<span class="stag">FastAPI</span><span class="stag">BevyRS</span>
+							<span class="stag">Node.js</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="sub-panel">
+					<div class="sub-panel-hdr">SYS: TOOLS</div>
+					<div class="sub-panel-body">
+						<div class="skill-tags">
+							<span class="stag">Git</span><span class="stag">Docker</span>
+							<span class="stag">Unix Shell</span><span class="stag">Webpack</span>
+							<span class="stag">Neovim</span><span class="stag">VS Code</span>
+							<span class="stag">Azure DevOps</span><span class="stag">CLI</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="sub-panel">
+					<div class="sub-panel-hdr">SYS: CREDENTIALS</div>
+					<div class="sub-panel-body">
+						<div class="skill-tags">
+							<span class="stag">Software Development Certificate</span>
+							<span class="stag">ACTI // 2021</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ── SYS-05: CONTACT ── -->
+<div class="panel-wrap reveal" id="contact">
+	<div class="panel">
+		<div class="panel-hdr">
+			<div class="panel-dot"></div>
+			<span class="panel-id">SYS-05</span>
+			<span class="panel-sep">//</span>
+			<span class="panel-title">UPLINK CHANNEL</span>
+			<span class="panel-jp">接続チャンネル</span>
+			<span class="panel-status">[ OPEN ]</span>
+		</div>
+		<div class="panel-body">
+			<div class="contact-big">
+				ESTABLISH<br>UPLINK<br><span>CHANNEL.</span>
+			</div>
+			<div class="contact-links">
+				<a href="https://github.com/l-snq" target="_blank" class="uplink-row">
+					<div class="blink-dot"></div>
+					GITHUB // github.com/l-snq
+					<span class="arrow">→</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+	<div class="footer-id">SNQ-PORTFOLIO-v2.0 // <span id="footer-time">UTC 00:00:00</span></div>
+	<button class="game-btn" id="game-btn">[ LAUNCH COMBAT SIM ]</button>
+</footer>
+
+<!-- Game -->
+<div class="game-wrap" id="game-wrap">
+	<canvas id="game-canvas" width="800" height="600"></canvas>
+	<div class="game-ui">
+		<div id="game-stats"><p>SCORE: <span id="game-score">0</span> &nbsp;//&nbsp; INTEGRITY: <span id="game-health">100</span></p></div>
+		<div><p>WASD / ARROWS: MOVE &nbsp;//&nbsp; SPACE: FIRE &nbsp;//&nbsp; ESC: ABORT</p></div>
+	</div>
+	<div class="game-over-screen" id="game-over">
+		<h2>SYSTEM FAILURE</h2>
+		<p>FINAL SCORE: <span id="final-score">0</span></p>
+		<p style="margin-top:12px;font-size:11px;letter-spacing:0.2em">PRESS ENTER TO REINITIALIZE</p>
+	</div>
+</div>
+
+<script>
+// ── CURSOR ──
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => {
+	cur.style.left = e.clientX + 'px';
+	cur.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.proj-card,.stag').forEach(el => {
+	el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+	el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+});
+
+// ── CLOCK ──
+function tick() {
+	const now = new Date();
+	const h = String(now.getUTCHours()).padStart(2,'0');
+	const m = String(now.getUTCMinutes()).padStart(2,'0');
+	const s = String(now.getUTCSeconds()).padStart(2,'0');
+	const t = `UTC ${h}:${m}:${s}`;
+	document.getElementById('sbar-time').textContent = t;
+	document.getElementById('footer-time').textContent = t;
+}
+tick();
+setInterval(tick, 1000);
+
+// ── DRIFTING COORDS ──
+let latBase = 49.25, lonBase = -123.1;
+function driftCoords() {
+	latBase += (Math.random() - 0.5) * 0.001;
+	lonBase += (Math.random() - 0.5) * 0.001;
+	const la = latBase.toFixed(4), lo = Math.abs(lonBase).toFixed(4);
+	const laDir = latBase >= 0 ? 'N' : 'S', loDir = lonBase < 0 ? 'W' : 'E';
+	document.getElementById('sbar-coords').textContent =
+		`LAT ${la}°${laDir} // LON ${lo}°${loDir}`;
+	if (document.getElementById('hero-lat'))
+		document.getElementById('hero-lat').textContent =
+			`${la}°${laDir}`;
+}
+driftCoords();
+setInterval(driftCoords, 2800);
+
+// ── REVEAL ON SCROLL ──
+const obs = new IntersectionObserver(entries => {
+	entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// ── GAME ──
+document.getElementById('game-btn').addEventListener('click', e => {
+	e.currentTarget.blur();
+	startGame();
+});
+
+function startGame() {
+	const gc     = document.getElementById('game-wrap');
+	const canvas = document.getElementById('game-canvas');
+	const ctx    = canvas.getContext('2d');
+	const over   = document.getElementById('game-over');
+	const sScore = document.getElementById('game-score');
+	const sHP    = document.getElementById('game-health');
+	const sFinal = document.getElementById('final-score');
+
+	gc.classList.add('active');
+	over.classList.remove('active');
+	let running=true,score=0,hp=100,last=0,spawnT=0;
+	sScore.textContent='0'; sHP.textContent='100';
+
+	function iso(x,y){return{x:(x-y)*2,y:x+y};}
+	const pl={x:0,y:0,size:20,speed:1.5};
+	const keys={},bullets=[],enemies=[],particles=[];
+	let cooldown=0;
+
+	class Enemy{
+		constructor(x,y){this.x=x;this.y=y;this.size=15;this.speed=0.8;this.hp=2;}
+		update(){
+			const dx=pl.x-this.x,dy=pl.y-this.y,d=Math.hypot(dx,dy);
+			if(d>1){this.x+=dx/d*this.speed;this.y+=dy/d*this.speed;}
+		}
+		draw(){
+			const p=iso(this.x,this.y),cx=canvas.width/2+p.x,cy=canvas.height/2+p.y,s=this.size,h=s*1.5;
+			ctx.fillStyle='rgba(0,0,0,0.3)';
+			ctx.beginPath();ctx.ellipse(cx,cy+10,s*.8,s*.4,0,0,Math.PI*2);ctx.fill();
+			ctx.fillStyle='#ff2244';
+			ctx.beginPath();ctx.moveTo(cx,cy-h);ctx.lineTo(cx+s,cy-h+s*.5);ctx.lineTo(cx,cy-h+s);ctx.lineTo(cx-s,cy-h+s*.5);ctx.closePath();ctx.fill();
+			ctx.fillStyle='#991122';
+			ctx.beginPath();ctx.moveTo(cx-s,cy-h+s*.5);ctx.lineTo(cx,cy-h+s);ctx.lineTo(cx,cy+s*.5);ctx.lineTo(cx-s,cy);ctx.closePath();ctx.fill();
+			ctx.fillStyle='#aa1133';
+			ctx.beginPath();ctx.moveTo(cx+s,cy-h+s*.5);ctx.lineTo(cx,cy-h+s);ctx.lineTo(cx,cy+s*.5);ctx.lineTo(cx+s,cy);ctx.closePath();ctx.fill();
+		}
+	}
+
+	class Bullet{
+		constructor(x,y,dx,dy){this.x=x;this.y=y;this.dx=dx;this.dy=dy;this.speed=5;this.size=5;this.life=100;}
+		update(){this.x+=this.dx*this.speed;this.y+=this.dy*this.speed;this.life--;}
+		draw(){
+			const p=iso(this.x,this.y);
+			ctx.fillStyle='#ff8c00';
+			ctx.shadowColor='#ff8c00';ctx.shadowBlur=8;
+			ctx.beginPath();ctx.arc(canvas.width/2+p.x,canvas.height/2+p.y,this.size,0,Math.PI*2);ctx.fill();
+			ctx.shadowBlur=0;
+		}
+	}
+
+	class Particle{
+		constructor(x,y){
+			this.x=x;this.y=y;this.z=0;
+			this.vx=(Math.random()-.5)*4;this.vy=(Math.random()-.5)*4;
+			this.vz=Math.random()*3+2;this.gravity=0.2;
+			this.size=Math.random()*3+2;this.life=30;this.maxLife=30;
+			this.color=['#ff8c00','#ff2244','#00ff88','#ff8c00'][Math.floor(Math.random()*4)];
+		}
+		update(){
+			this.x+=this.vx;this.y+=this.vy;this.z+=this.vz;this.vz-=this.gravity;this.life--;
+			if(this.z<=0&&this.vz<0){this.z=0;this.vz*=-.5;this.vx*=.7;this.vy*=.7;}
+		}
+		draw(){
+			const p=iso(this.x,this.y);
+			ctx.globalAlpha=this.life/this.maxLife;
+			ctx.fillStyle=this.color;
+			ctx.beginPath();ctx.arc(canvas.width/2+p.x,canvas.height/2+p.y-this.z,this.size,0,Math.PI*2);ctx.fill();
+			ctx.globalAlpha=1;
+		}
+	}
+
+	function burst(x,y,n=8){for(let i=0;i<n;i++)particles.push(new Particle(x,y));}
+
+	function drawGrid(){
+		ctx.strokeStyle='rgba(255,140,0,0.06)';ctx.lineWidth=1;
+		const gs=40,ox=-pl.x*2+pl.y*2,oy=-pl.x-pl.y;
+		for(let gx=-15;gx<=15;gx++){
+			for(let gy=-15;gy<=15;gy++){
+				const wx=Math.floor(pl.x/gs)*gs+gx*gs,wy=Math.floor(pl.y/gs)*gs+gy*gs;
+				const a=iso(wx,wy),b=iso(wx+gs,wy),c=iso(wx,wy+gs);
+				ctx.beginPath();ctx.moveTo(canvas.width/2+a.x+ox,canvas.height/2+a.y+oy);ctx.lineTo(canvas.width/2+b.x+ox,canvas.height/2+b.y+oy);ctx.stroke();
+				ctx.beginPath();ctx.moveTo(canvas.width/2+a.x+ox,canvas.height/2+a.y+oy);ctx.lineTo(canvas.width/2+c.x+ox,canvas.height/2+c.y+oy);ctx.stroke();
+			}
+		}
+	}
+
+	function drawPlayer(){
+		const p=iso(pl.x,pl.y),cx=canvas.width/2+p.x,cy=canvas.height/2+p.y,s=pl.size;
+		ctx.fillStyle='rgba(0,0,0,0.3)';
+		ctx.beginPath();ctx.ellipse(cx,cy+5,s*.8,s*.4,0,0,Math.PI*2);ctx.fill();
+		ctx.fillStyle='#ff8c00';ctx.shadowColor='#ff8c00';ctx.shadowBlur=12;
+		ctx.beginPath();ctx.moveTo(cx,cy-s*2);ctx.lineTo(cx+s,cy);ctx.lineTo(cx-s,cy);ctx.closePath();ctx.fill();
+		ctx.fillStyle='#5a2800';ctx.shadowBlur=0;
+		ctx.beginPath();ctx.moveTo(cx-s,cy);ctx.lineTo(cx,cy+s*.5);ctx.lineTo(cx,cy-s*2);ctx.closePath();ctx.fill();
+	}
+
+	const GAME_KEYS=new Set(['w','a','s','d','ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' ']);
+	const onKey=e=>{if(GAME_KEYS.has(e.key))e.preventDefault();keys[e.key]=e.type==='keydown';};
+	const onSpec=e=>{
+		if(e.key==='Escape')closeGame();
+		else if(e.key==='Enter'&&!running)closeGame();
+	};
+	document.addEventListener('keydown',onKey);
+	document.addEventListener('keyup',onKey);
+	document.addEventListener('keydown',onSpec);
+
+	function closeGame(){
+		running=false;
+		gc.classList.remove('active');
+		over.classList.remove('active');
+		document.removeEventListener('keydown',onKey);
+		document.removeEventListener('keyup',onKey);
+		document.removeEventListener('keydown',onSpec);
+	}
+	function endGame(){
+		running=false;
+		sFinal.textContent=score;
+		over.classList.add('active');
+		document.removeEventListener('keydown',onKey);
+		document.removeEventListener('keyup',onKey);
+	}
+
+	function loop(ts){
+		if(!running)return;
+		ctx.clearRect(0,0,canvas.width,canvas.height);
+		ctx.fillStyle='#020408';ctx.fillRect(0,0,canvas.width,canvas.height);
+		drawGrid();
+
+		if(keys['w']||keys['ArrowUp'])   pl.y-=pl.speed;
+		if(keys['s']||keys['ArrowDown']) pl.y+=pl.speed;
+		if(keys['a']||keys['ArrowLeft']) pl.x-=pl.speed;
+		if(keys['d']||keys['ArrowRight'])pl.x+=pl.speed;
+		if(cooldown>0)cooldown--;
+		if(keys[' ']&&cooldown===0){
+			[[1,0],[-1,0],[0,1],[0,-1]].forEach(([dx,dy])=>bullets.push(new Bullet(pl.x,pl.y,dx,dy)));
+			cooldown=20;
+		}
+		spawnT++;
+		if(spawnT>120){
+			const a=Math.random()*Math.PI*2,d=200+Math.random()*100;
+			enemies.push(new Enemy(Math.cos(a)*d,Math.sin(a)*d));
+			spawnT=0;
+		}
+		for(let i=bullets.length-1;i>=0;i--){bullets[i].update();if(bullets[i].life<=0)bullets.splice(i,1);}
+		outer:for(let i=enemies.length-1;i>=0;i--){
+			enemies[i].update();
+			if(Math.hypot(pl.x-enemies[i].x,pl.y-enemies[i].y)<pl.size+enemies[i].size){
+				hp-=10;burst(enemies[i].x,enemies[i].y,5);enemies.splice(i,1);
+				sHP.textContent=hp;if(hp<=0){endGame();return;}continue;
+			}
+			for(let j=bullets.length-1;j>=0;j--){
+				if(Math.hypot(bullets[j].x-enemies[i].x,bullets[j].y-enemies[i].y)<enemies[i].size+bullets[j].size){
+					enemies[i].hp--;burst(enemies[i].x,enemies[i].y,4);bullets.splice(j,1);
+					if(enemies[i].hp<=0){score+=10;sScore.textContent=score;burst(enemies[i].x,enemies[i].y,12);enemies.splice(i,1);}
+					continue outer;
+				}
+			}
+		}
+		for(let i=particles.length-1;i>=0;i--){particles[i].update();if(particles[i].life<=0)particles.splice(i,1);}
+		particles.forEach(p=>p.draw());
+		enemies.forEach(e=>e.draw());
+		bullets.forEach(b=>b.draw());
+		drawPlayer();
+		requestAnimationFrame(loop);
+	}
+	requestAnimationFrame(loop);
+}
+</script>
+</body>
 </html>
