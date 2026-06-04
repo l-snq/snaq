@@ -7,19 +7,22 @@
 	<title>SNQ</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=IBM+Plex+Mono:wght@400;700&family=UnifrakturMaguntia&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
 	<style>
 		*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 		:root {
-			--paper:   #f0e8d0;
-			--paper-dark: #d8ccaa;
-			--ink:     #1a1008;
-			--blue:    #0f2a6e;
-			--blue-hi: #1a3d9e;
+			--void:    #06080f;
+			--deep:    #0a0d18;
+			--surface: #0e1220;
+			--edge:    #151c30;
+			--blue:    #1a3d9e;
+			--blue-hi: #3d6eff;
 			--blue-lo: #091a46;
-			--red:     #8b1a1a;
-			--stamp:   'Special Elite', cursive;
+			--glow:    #4d7fff;
+			--frost:   #a8c0ff;
+			--white:   #e8eeff;
+			--dim:     #4a5580;
 			--display: 'Bebas Neue', sans-serif;
 			--mono:    'IBM Plex Mono', monospace;
 		}
@@ -27,386 +30,405 @@
 		html { scroll-behavior: smooth; }
 
 		body {
-			background: var(--paper);
-			color: var(--ink);
-			font-family: var(--stamp);
+			background: var(--void);
+			color: var(--white);
+			font-family: var(--mono);
 			overflow-x: hidden;
-			/* letterpress paper texture */
-			background-image:
-				url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
 		}
 
-		/* ink bleed on text */
-		h1, h2, h3 {
-			filter: url(#ink-bleed);
+		a { color: var(--blue-hi); text-decoration: none; }
+		a:hover { color: var(--glow); }
+
+		/* ── HERO ── */
+		.hero {
+			position: relative;
+			width: 100%;
+			height: 100vh;
+			min-height: 600px;
+			overflow: hidden;
+		}
+		#hero-3d-canvas {
+			display: block;
+			position: absolute;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+		}
+		.hero-overlay {
+			position: absolute;
+			inset: 0;
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-end;
+			padding: 0 60px 64px;
+			background: linear-gradient(
+				to bottom,
+				transparent 40%,
+				rgba(6,8,15,0.5) 70%,
+				rgba(6,8,15,0.92) 100%
+			);
+			pointer-events: none;
+		}
+		.hero-name {
+			font-family: var(--display);
+			font-size: clamp(96px, 16vw, 220px);
+			line-height: 0.88;
+			color: var(--white);
+			letter-spacing: 0.01em;
+			position: relative;
+			display: inline-block;
+		}
+		.hero-name::after {
+			content: 'SNQ';
+			position: absolute;
+			inset: 0;
+			color: var(--blue-hi);
+			opacity: 0.18;
+			transform: translate(3px, 4px);
+			pointer-events: none;
+		}
+		.hero-sub {
+			font-family: var(--display);
+			font-size: clamp(20px, 3.5vw, 48px);
+			color: var(--blue-hi);
+			letter-spacing: 0.12em;
+			margin-top: 6px;
+		}
+		.hero-tagline {
+			font-family: var(--mono);
+			font-size: clamp(11px, 1.3vw, 14px);
+			color: var(--frost);
+			opacity: 0.7;
+			letter-spacing: 0.18em;
+			margin-top: 18px;
+		}
+		.hero-actions {
+			display: flex;
+			gap: 14px;
+			margin-top: 28px;
+			pointer-events: all;
+		}
+		.btn-primary {
+			font-family: var(--mono);
+			font-size: 10px;
+			letter-spacing: 0.22em;
+			text-transform: uppercase;
+			padding: 12px 28px;
+			background: var(--blue-hi);
+			color: var(--void);
+			text-decoration: none;
+			transition: background 0.15s, color 0.15s;
+		}
+		.btn-primary:hover { background: var(--glow); color: var(--void); }
+		.btn-ghost {
+			font-family: var(--mono);
+			font-size: 10px;
+			letter-spacing: 0.22em;
+			text-transform: uppercase;
+			padding: 12px 28px;
+			border: 1px solid var(--blue);
+			color: var(--frost);
+			text-decoration: none;
+			transition: border-color 0.15s, color 0.15s;
+		}
+		.btn-ghost:hover { border-color: var(--glow); color: var(--glow); }
+
+		.hero-nav {
+			position: absolute;
+			top: 36px;
+			right: 60px;
+			display: flex;
+			gap: 32px;
+			pointer-events: all;
+		}
+		.hero-nav a {
+			font-family: var(--mono);
+			font-size: 9px;
+			letter-spacing: 0.28em;
+			text-transform: uppercase;
+			color: var(--frost);
+			opacity: 0.6;
+			transition: opacity 0.15s, color 0.15s;
+		}
+		.hero-nav a:hover { opacity: 1; color: var(--blue-hi); }
+
+		.scroll-hint {
+			position: absolute;
+			bottom: 28px;
+			right: 60px;
+			font-family: var(--mono);
+			font-size: 8px;
+			letter-spacing: 0.3em;
+			color: var(--frost);
+			opacity: 0.3;
+			text-transform: uppercase;
+			writing-mode: vertical-rl;
 		}
 
-		a { color: var(--blue); text-decoration: none; }
-		a:hover { text-decoration: underline; color: var(--blue-hi); }
-
-		/* ── INK BLEED SVG FILTER ── */
-		#svg-filters { position: absolute; width: 0; height: 0; overflow: hidden; }
-
-		/* ── STAMP / BLOCK INK TEXTURE UTILITY ── */
-		.ink-heavy {
-			filter: url(#ink-bleed);
-		}
-		.ink-stamp {
-			filter: url(#ink-stamp);
-		}
-
-		/* ── PAGE WRAPPER ── */
+		/* ── PAGE ── */
 		.page {
 			max-width: 1100px;
 			margin: 0 auto;
-			padding: 40px 24px 80px;
-			position: relative;
+			padding: 0 48px 100px;
 		}
 
-		/* ── MASTHEAD ── */
-		.masthead {
-			position: relative;
-			border-top: 8px solid var(--ink);
-			border-bottom: 3px solid var(--ink);
-			padding: 24px 0 20px;
-			margin-bottom: 0;
-			overflow: visible;
-		}
-		.masthead::before {
-			content: '';
-			position: absolute;
-			top: 12px; left: 0; right: 0;
-			height: 2px;
-			background: var(--ink);
-		}
-		.masthead-top {
+		/* ── SECTION HEADER ── */
+		.sec-label {
 			font-family: var(--mono);
 			font-size: 9px;
-			letter-spacing: 0.3em;
+			letter-spacing: 0.35em;
 			text-transform: uppercase;
-			color: var(--ink);
-			opacity: 0.6;
-			margin-bottom: 6px;
+			color: var(--blue-hi);
+			margin-bottom: 28px;
+			display: flex;
+			align-items: center;
+			gap: 16px;
 		}
-		.masthead-name {
+		.sec-label::after {
+			content: '';
+			flex: 1;
+			height: 1px;
+			background: var(--edge);
+		}
+
+		/* ── ABOUT ── */
+		#about {
+			padding: 100px 0 80px;
+			display: grid;
+			grid-template-columns: 3fr 2fr;
+			gap: 60px;
+			align-items: start;
+		}
+		.about-pull {
 			font-family: var(--display);
-			font-size: clamp(100px, 18vw, 240px);
-			line-height: 0.85;
-			color: var(--ink);
-			letter-spacing: -0.01em;
-			position: relative;
-			display: inline-block;
-			filter: url(#ink-bleed);
+			font-size: clamp(32px, 4.5vw, 58px);
+			line-height: 1.05;
+			color: var(--white);
+			letter-spacing: 0.02em;
+			margin-bottom: 28px;
 		}
-		/* blue ink registration offset */
-		.masthead-name::before {
-			content: 'SNQ';
+		.about-pull em {
+			color: var(--blue-hi);
+			font-style: normal;
+		}
+		.about-body {
+			font-family: var(--mono);
+			font-size: 13px;
+			line-height: 1.85;
+			color: var(--dim);
+		}
+		.about-body p + p { margin-top: 14px; }
+		.about-stat {
+			background: var(--surface);
+			border: 1px solid var(--edge);
+			padding: 28px;
+			position: relative;
+			overflow: hidden;
+		}
+		.about-stat::before {
+			content: '';
 			position: absolute;
-			top: 3px; left: -3px;
-			color: var(--blue);
-			opacity: 0.45;
-			filter: url(#ink-bleed);
+			top: 0; left: 0; right: 0;
+			height: 2px;
+			background: linear-gradient(90deg, var(--blue-hi), transparent);
+		}
+		.stat-year {
+			font-family: var(--display);
+			font-size: 88px;
+			line-height: 1;
+			color: var(--blue-hi);
+			opacity: 0.15;
+			position: absolute;
+			bottom: -10px;
+			right: -8px;
 			pointer-events: none;
 		}
-		.masthead-rule-thick {
-			height: 6px;
-			background: var(--ink);
-			margin: 14px 0 8px;
+		.stat-label {
+			font-size: 8px;
+			letter-spacing: 0.3em;
+			color: var(--dim);
+			margin-bottom: 10px;
 		}
-		.masthead-subtitle-row {
-			display: flex;
-			align-items: baseline;
-			gap: 20px;
-			flex-wrap: wrap;
-		}
-		.masthead-subtitle {
+		.stat-value {
 			font-family: var(--display);
-			font-size: clamp(22px, 4vw, 48px);
-			color: var(--blue);
-			letter-spacing: 0.05em;
-			filter: url(#ink-bleed);
+			font-size: 52px;
+			color: var(--blue-hi);
+			line-height: 1;
 		}
-		.masthead-date {
-			font-family: var(--mono);
-			font-size: 10px;
-			letter-spacing: 0.2em;
-			color: var(--ink);
-			opacity: 0.5;
-			margin-left: auto;
-		}
-		.masthead-rule-thin {
-			height: 1px;
-			background: var(--ink);
-			margin-top: 14px;
-		}
-
-		/* ── TORN EDGE DIVIDER ── */
-		.torn {
-			width: 100%;
-			height: 18px;
-			margin: 0;
-			background: var(--ink);
-			clip-path: polygon(
-				0% 40%, 1% 0%, 2.5% 60%, 4% 10%, 5.5% 70%, 7% 20%, 8.5% 80%,
-				10% 15%, 11.5% 75%, 13% 5%, 14.5% 65%, 16% 30%, 17.5% 85%,
-				19% 10%, 20.5% 70%, 22% 25%, 23.5% 90%, 25% 15%, 26.5% 60%,
-				28% 5%, 29.5% 75%, 31% 20%, 32.5% 80%, 34% 10%, 35.5% 65%,
-				37% 30%, 38.5% 85%, 40% 5%, 41.5% 70%, 43% 25%, 44.5% 90%,
-				46% 15%, 47.5% 55%, 49% 0%, 50.5% 65%, 52% 20%, 53.5% 80%,
-				55% 10%, 56.5% 70%, 58% 30%, 59.5% 85%, 61% 5%, 62.5% 60%,
-				64% 15%, 65.5% 75%, 67% 25%, 68.5% 90%, 70% 10%, 71.5% 65%,
-				73% 30%, 74.5% 80%, 76% 0%, 77.5% 70%, 79% 20%, 80.5% 85%,
-				82% 15%, 83.5% 60%, 85% 5%, 86.5% 75%, 88% 30%, 89.5% 90%,
-				91% 10%, 92.5% 65%, 94% 20%, 95.5% 80%, 97% 5%, 98.5% 55%,
-				100% 40%, 100% 100%, 0% 100%
-			);
-		}
-
-		/* ── LAYOUT COLUMNS ── */
-		.col-wrap {
-			display: grid;
-			gap: 0;
-			position: relative;
-		}
-		.col-2 { grid-template-columns: 1fr 1fr; }
-		.col-3 { grid-template-columns: 2fr 1fr 1fr; }
-		.col-bleed { grid-template-columns: 3fr 2fr; }
-
-		.col-divider {
-			border-left: 1.5px solid var(--ink);
-		}
-
-		/* ── PASTE-UP BLOCKS ── */
-		.block {
-			padding: 20px 24px;
-			position: relative;
-		}
-		.block-inked {
-			background: var(--ink);
-			color: var(--paper);
-		}
-		.block-blue {
-			background: var(--blue);
-			color: var(--paper);
-		}
-		.block-ruled {
-			border: 2px solid var(--ink);
-		}
-
-		/* tilted paste-up panels */
-		.tilt-1  { transform: rotate(-1.2deg); z-index: 2; }
-		.tilt-2  { transform: rotate(0.8deg);  z-index: 2; }
-		.tilt-3  { transform: rotate(-2.1deg); z-index: 3; }
-		.tilt-4  { transform: rotate(1.5deg);  z-index: 2; }
-		.tilt-5  { transform: rotate(-0.7deg); z-index: 2; }
-		.tilt-6  { transform: rotate(2.3deg);  z-index: 3; }
-		.tilt-7  { transform: rotate(-1.8deg); z-index: 2; }
-
-		/* ── SECTION LABEL ── */
-		.section-flag {
-			display: inline-block;
-			background: var(--ink);
-			color: var(--paper);
-			font-family: var(--display);
-			font-size: 13px;
-			letter-spacing: 0.25em;
-			padding: 4px 14px 2px;
-			margin-bottom: 14px;
-		}
-		.section-flag.blue {
-			background: var(--blue);
-		}
-
-		/* ── PULL QUOTE ── */
-		.pull {
-			font-family: var(--display);
-			font-size: clamp(28px, 4.5vw, 56px);
-			line-height: 1.05;
-			color: var(--ink);
-			letter-spacing: 0.02em;
-			filter: url(#ink-bleed);
-		}
-		.pull em {
-			color: var(--blue);
-			font-style: normal;
-			border-bottom: 3px solid var(--blue);
-		}
-
-		/* ── BODY TEXT ── */
-		.body-text {
-			font-family: var(--stamp);
-			font-size: 14px;
-			line-height: 1.75;
-			color: var(--ink);
-		}
-		.body-text p + p { margin-top: 10px; }
-
-		/* ── RULE ORNAMENTS ── */
-		.rule-thick { height: 4px; background: var(--ink); margin: 0; }
-		.rule-thin  { height: 1px; background: var(--ink); margin: 0; opacity: 0.4; }
-		.rule-blue  { height: 4px; background: var(--blue); margin: 0; }
-		.rule-double {
-			border-top: 4px solid var(--ink);
-			border-bottom: 1px solid var(--ink);
-			padding-top: 3px;
-			margin: 0;
+		.stat-detail {
+			font-size: 11px;
+			color: var(--dim);
+			line-height: 2;
+			margin-top: 16px;
 		}
 
 		/* ── WORKS ── */
+		#works { padding: 80px 0; }
 		.work-entry {
-			padding: 18px 0;
-			border-bottom: 1px solid var(--ink);
-			position: relative;
 			display: grid;
-			grid-template-columns: 36px 1fr auto;
-			gap: 16px;
+			grid-template-columns: 40px 1fr auto;
+			gap: 20px;
 			align-items: start;
+			padding: 24px 0;
+			border-bottom: 1px solid var(--edge);
 			text-decoration: none;
 			color: inherit;
+			transition: background 0.15s;
+			position: relative;
 		}
-		.work-entry:first-child { border-top: 1px solid var(--ink); }
-		.work-entry:hover .work-title { color: var(--blue); }
+		.work-entry:first-child { border-top: 1px solid var(--edge); }
+		.work-entry::before {
+			content: '';
+			position: absolute;
+			left: -48px; right: -48px; top: 0; bottom: 0;
+			background: var(--surface);
+			opacity: 0;
+			transition: opacity 0.15s;
+			z-index: 0;
+		}
+		.work-entry:hover::before { opacity: 1; }
+		.work-entry > * { position: relative; z-index: 1; }
+		.work-entry:hover .work-title { color: var(--blue-hi); }
 
 		.work-num {
-			font-family: var(--mono);
 			font-size: 10px;
-			color: var(--ink);
-			opacity: 0.4;
-			padding-top: 4px;
+			color: var(--dim);
+			padding-top: 6px;
+			letter-spacing: 0.1em;
 		}
 		.work-title {
 			font-family: var(--display);
-			font-size: clamp(24px, 3.5vw, 42px);
-			letter-spacing: 0.03em;
+			font-size: clamp(26px, 3.5vw, 44px);
+			letter-spacing: 0.04em;
 			line-height: 1;
-			margin-bottom: 5px;
-			filter: url(#ink-bleed);
+			margin-bottom: 6px;
 			transition: color 0.15s;
 		}
 		.work-desc {
-			font-family: var(--stamp);
 			font-size: 12px;
-			line-height: 1.6;
-			color: var(--ink);
-			opacity: 0.75;
-			max-width: 480px;
+			line-height: 1.7;
+			color: var(--dim);
+			max-width: 500px;
 		}
 		.work-tags {
-			font-family: var(--mono);
 			font-size: 8px;
-			letter-spacing: 0.1em;
+			letter-spacing: 0.12em;
 			text-align: right;
 			flex-shrink: 0;
-			padding-top: 4px;
+			padding-top: 6px;
 		}
 		.work-tags span {
 			display: block;
-			background: var(--blue);
-			color: var(--paper);
-			padding: 1px 5px;
-			margin-bottom: 2px;
+			border: 1px solid var(--blue);
+			color: var(--blue-hi);
+			padding: 2px 7px;
+			margin-bottom: 3px;
 		}
 
 		/* ── HISTORY ── */
-		.hist-entry {
-			padding: 20px 0;
-			border-bottom: 1px solid rgba(26,16,8,0.3);
+		#history { padding: 80px 0; }
+		.hist-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 0 60px;
 		}
-		.hist-entry:first-child { border-top: 1px solid rgba(26,16,8,0.3); }
+		.hist-entry {
+			padding: 24px 0;
+			border-bottom: 1px solid var(--edge);
+		}
+		.hist-entry:first-child { border-top: 1px solid var(--edge); }
 		.hist-date {
-			font-family: var(--mono);
 			font-size: 9px;
-			letter-spacing: 0.2em;
-			color: var(--blue);
-			margin-bottom: 4px;
+			letter-spacing: 0.22em;
+			color: var(--blue-hi);
+			margin-bottom: 5px;
 		}
 		.hist-co {
-			font-family: var(--stamp);
-			font-size: 12px;
-			color: var(--ink);
-			opacity: 0.6;
+			font-size: 11px;
+			color: var(--dim);
 			margin-bottom: 6px;
-			font-style: italic;
 		}
 		.hist-title {
 			font-family: var(--display);
-			font-size: clamp(18px, 2.5vw, 28px);
+			font-size: clamp(18px, 2.2vw, 26px);
 			letter-spacing: 0.04em;
-			margin-bottom: 6px;
-			filter: url(#ink-bleed);
+			color: var(--white);
+			margin-bottom: 8px;
 		}
 		.hist-desc {
-			font-family: var(--stamp);
-			font-size: 13px;
-			line-height: 1.7;
-			color: var(--ink);
-			opacity: 0.8;
+			font-size: 12px;
+			line-height: 1.75;
+			color: var(--dim);
 		}
 
 		/* ── ARSENAL ── */
-		.skill-group { margin-bottom: 20px; }
-		.skill-label {
-			font-family: var(--mono);
+		#arsenal { padding: 80px 0; }
+		.skill-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 1px;
+			background: var(--edge);
+			border: 1px solid var(--edge);
+			margin-top: 0;
+		}
+		.skill-block {
+			background: var(--surface);
+			padding: 24px 20px;
+			position: relative;
+			overflow: hidden;
+		}
+		.skill-block::before {
+			content: '';
+			position: absolute;
+			top: 0; left: 0; right: 0;
+			height: 1px;
+			background: linear-gradient(90deg, var(--blue-hi), transparent);
+			opacity: 0.6;
+		}
+		.skill-block-label {
 			font-size: 8px;
 			letter-spacing: 0.3em;
 			text-transform: uppercase;
-			color: var(--paper);
-			background: var(--ink);
-			display: inline-block;
-			padding: 2px 8px;
-			margin-bottom: 8px;
+			color: var(--blue-hi);
+			margin-bottom: 14px;
 		}
-		.skill-items {
-			font-family: var(--stamp);
-			font-size: 14px;
-			line-height: 1.9;
-			color: var(--ink);
-		}
-
-		/* ── OVERPRINT STAMP ── */
-		.overprint {
-			position: absolute;
-			font-family: var(--display);
-			font-size: 80px;
-			color: var(--blue);
-			opacity: 0.06;
-			letter-spacing: 0.05em;
-			pointer-events: none;
-			user-select: none;
-			filter: url(#ink-bleed);
+		.skill-block-items {
+			font-size: 13px;
+			line-height: 2.1;
+			color: var(--dim);
 		}
 
 		/* ── CONTACT ── */
+		#contact { padding: 100px 0 80px; }
 		.contact-giant {
 			font-family: var(--display);
-			font-size: clamp(52px, 9vw, 120px);
+			font-size: clamp(60px, 10vw, 130px);
 			line-height: 0.9;
-			color: var(--ink);
 			letter-spacing: 0.02em;
-			filter: url(#ink-bleed);
+			color: var(--white);
+			margin-bottom: 48px;
 		}
-		.contact-giant span { color: var(--blue); }
+		.contact-giant span { color: var(--blue-hi); }
 		.contact-link {
-			display: inline-flex;
+			display: flex;
 			align-items: center;
-			gap: 12px;
-			font-family: var(--mono);
+			gap: 16px;
 			font-size: 12px;
-			letter-spacing: 0.15em;
-			color: var(--ink);
-			padding: 14px 0;
-			border-bottom: 1px solid var(--ink);
-			width: 100%;
-			max-width: 440px;
+			letter-spacing: 0.18em;
+			color: var(--dim);
+			padding: 18px 0;
+			border-bottom: 1px solid var(--edge);
+			max-width: 480px;
 			transition: color 0.15s, padding-left 0.15s;
+			text-decoration: none;
 		}
-		.contact-link:hover { color: var(--blue); padding-left: 10px; text-decoration: none; }
-		.contact-link .arr { margin-left: auto; }
+		.contact-link:hover { color: var(--blue-hi); padding-left: 12px; }
+		.contact-link .arr { margin-left: auto; color: var(--blue-hi); }
 
 		/* ── FOOTER ── */
 		.footer {
-			border-top: 4px solid var(--ink);
-			padding-top: 20px;
+			border-top: 1px solid var(--edge);
+			padding-top: 24px;
 			margin-top: 40px;
 			display: flex;
 			align-items: center;
@@ -415,11 +437,9 @@
 			gap: 16px;
 		}
 		.footer-copy {
-			font-family: var(--mono);
 			font-size: 9px;
 			letter-spacing: 0.2em;
-			color: var(--ink);
-			opacity: 0.5;
+			color: var(--dim);
 			line-height: 2;
 		}
 		.game-btn {
@@ -428,238 +448,212 @@
 			letter-spacing: 0.2em;
 			text-transform: uppercase;
 			padding: 10px 20px;
-			border: 1.5px solid var(--ink);
+			border: 1px solid var(--blue);
 			background: transparent;
-			color: var(--ink);
+			color: var(--blue-hi);
 			cursor: pointer;
-			transition: background 0.15s, color 0.15s;
+			transition: background 0.15s, color 0.15s, border-color 0.15s;
 		}
-		.game-btn:hover { background: var(--blue); color: var(--paper); border-color: var(--blue); }
+		.game-btn:hover { background: var(--blue-hi); color: var(--void); border-color: var(--blue-hi); }
 
 		/* ── GAME ── */
 		.game-wrap {
 			display: none; position: fixed; inset: 0;
-			background: rgba(15,8,0,0.96); z-index: 9500;
+			background: rgba(6,8,15,0.97); z-index: 9500;
 			justify-content: center; align-items: center; flex-direction: column;
 		}
 		.game-wrap.active { display: flex; }
 		#game-canvas {
-			border: 2px solid var(--blue);
-			background: var(--ink);
+			border: 1px solid var(--blue);
+			background: var(--void);
 		}
 		.game-ui { font-family: var(--mono); margin-top: 16px; text-align: center; }
-		.game-ui p { font-size: 11px; color: var(--paper); opacity: 0.7; margin: 3px 0; }
-		#game-stats p { color: var(--blue); font-size: 13px; opacity: 1; }
+		.game-ui p { font-size: 11px; color: var(--frost); opacity: 0.7; margin: 3px 0; }
+		#game-stats p { color: var(--blue-hi); font-size: 13px; opacity: 1; }
 		.game-over-screen {
 			display: none; position: absolute; inset: 0;
 			justify-content: center; align-items: center;
 			flex-direction: column; text-align: center;
-			font-family: var(--display); background: rgba(15,8,0,0.94);
+			font-family: var(--display); background: rgba(6,8,15,0.95);
 		}
 		.game-over-screen.active { display: flex; }
 		.game-over-screen h2 {
-			font-size: 80px; color: var(--paper);
-			letter-spacing: 0.05em;
-			margin-bottom: 16px;
-			filter: url(#ink-bleed);
+			font-size: 80px; color: var(--white);
+			letter-spacing: 0.05em; margin-bottom: 16px;
 		}
-		.game-over-screen p { font-family: var(--mono); font-size: 13px; color: var(--paper); opacity: 0.6; margin: 6px 0; }
+		.game-over-screen p { font-family: var(--mono); font-size: 13px; color: var(--frost); opacity: 0.6; margin: 6px 0; }
 
 		/* ── REVEAL ── */
-		.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+		.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
 		.reveal.vis { opacity: 1; transform: none; }
 
 		/* ── RESPONSIVE ── */
-		@media (max-width: 700px) {
-			.col-2, .col-3, .col-bleed { grid-template-columns: 1fr; }
-			.col-divider { border-left: none; border-top: 1.5px solid var(--ink); }
-			.work-entry { grid-template-columns: 30px 1fr; }
+		@media (max-width: 800px) {
+			.page { padding: 0 24px 80px; }
+			.hero-overlay { padding: 0 28px 48px; }
+			.hero-nav { right: 28px; top: 24px; gap: 20px; }
+			.scroll-hint { display: none; }
+			#about { grid-template-columns: 1fr; gap: 40px; padding: 60px 0; }
+			.hist-grid { grid-template-columns: 1fr; }
+			.skill-grid { grid-template-columns: 1fr 1fr; }
+			.work-entry { grid-template-columns: 32px 1fr; }
 			.work-tags { display: none; }
-			.tilt-1, .tilt-2, .tilt-3, .tilt-4, .tilt-5, .tilt-6, .tilt-7 { transform: none; }
+		}
+		@media (max-width: 480px) {
+			.skill-grid { grid-template-columns: 1fr; }
 		}
 	</style>
 	%sveltekit.head%
 </head>
-<body data-sveltekit-preload-data="hover">
+<body>
 <div style="display:contents">%sveltekit.body%</div>
 
-<!-- INK SVG FILTERS -->
-<svg id="svg-filters" xmlns="http://www.w3.org/2000/svg">
-	<defs>
-		<filter id="ink-bleed" x="-5%" y="-5%" width="110%" height="110%">
-			<feTurbulence type="fractalNoise" baseFrequency="0.04 0.05" numOctaves="3" seed="2" result="noise"/>
-			<feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
-		</filter>
-		<filter id="ink-stamp" x="-5%" y="-5%" width="110%" height="110%">
-			<feTurbulence type="fractalNoise" baseFrequency="0.065" numOctaves="4" seed="8" result="noise"/>
-			<feDisplacementMap in="SourceGraphic" in2="noise" scale="3.5" xChannelSelector="R" yChannelSelector="G"/>
-			<feComposite operator="in" in2="SourceGraphic"/>
-		</filter>
-	</defs>
-</svg>
+<!-- ══ HERO ══ -->
+<section class="hero">
+	<canvas id="hero-3d-canvas"></canvas>
+	<nav class="hero-nav">
+		<a href="#about">About</a>
+		<a href="#works">Works</a>
+		<a href="#history">History</a>
+		<a href="#contact">Contact</a>
+	</nav>
+	<div class="hero-overlay">
+		<div class="hero-name">SNQ</div>
+		<div class="hero-sub">Full Stack Developer</div>
+		<div class="hero-tagline">Rust &nbsp;·&nbsp; TypeScript &nbsp;·&nbsp; Zig &nbsp;·&nbsp; Systems</div>
+		<div class="hero-actions">
+			<a href="#works" class="btn-primary">Selected Works</a>
+			<a href="https://github.com/l-snq" target="_blank" class="btn-ghost">GitHub ↗</a>
+		</div>
+	</div>
+	<div class="scroll-hint">Scroll</div>
+</section>
 
 <div class="page">
 
-	<!-- ══ MASTHEAD ══ -->
-	<header class="masthead">
-		<div class="masthead-top">Vol. I &nbsp;·&nbsp; Est. 2014 &nbsp;·&nbsp; github.com/l-snq</div>
-		<div class="masthead-name ink-heavy">SNQ</div>
-		<div class="masthead-rule-thick"></div>
-		<div class="masthead-subtitle-row">
-			<div class="masthead-subtitle">FULL STACK DEVELOPER</div>
-			<div class="masthead-date">Rust &nbsp;·&nbsp; TypeScript &nbsp;·&nbsp; C# &nbsp;·&nbsp; Systems</div>
-		</div>
-		<div class="masthead-rule-thin"></div>
-	</header>
-
-	<!-- ══ HERO LAYOUT ══ -->
-	<div class="col-wrap col-bleed" style="margin-top: 0; border-bottom: 3px solid var(--ink);">
-		<div class="block" style="padding: 32px 28px 28px; border-right: 3px solid var(--ink); position: relative;">
-			<div class="overprint" style="top: -10px; right: -20px; font-size: 140px; opacity: 0.04;">SNQ</div>
-			<div class="pull ink-heavy">
-				I notice software that <em>should exist</em> but doesn't.<br>Then I&nbsp;build&nbsp;it.
-			</div>
-			<div style="margin-top: 24px; display: flex; gap: 10px; flex-wrap: wrap;">
-				<a href="#works" style="display:inline-block; background:var(--ink); color:var(--paper); font-family:var(--mono); font-size:10px; letter-spacing:0.2em; padding:10px 20px; text-decoration:none;">SELECTED WORKS</a>
-				<a href="https://github.com/l-snq" target="_blank" style="display:inline-block; border:1.5px solid var(--ink); color:var(--ink); font-family:var(--mono); font-size:10px; letter-spacing:0.2em; padding:10px 20px; text-decoration:none;">GITHUB ↗</a>
-			</div>
-		</div>
-		<div class="block block-blue tilt-3 reveal" style="margin: -12px -8px 0 0; padding: 24px 20px; align-self: start;">
-			<div style="font-family:var(--mono); font-size:8px; letter-spacing:0.25em; color:var(--paper); opacity:0.6; margin-bottom:10px;">SYSTEMS / STACK</div>
-			<div style="font-family:var(--display); font-size:28px; color:var(--paper); line-height:1.1; filter:url(#ink-bleed);">
-				RUST<br>TYPE<br>SCRIPT<br>C#
-			</div>
-			<div style="margin-top:16px; font-family:var(--stamp); font-size:12px; color:var(--paper); opacity:0.7; line-height:1.7;">
-				Systems programmer<br>Modder<br>Tinkerer since '14
-			</div>
-		</div>
-	</div>
-
 	<!-- ══ ABOUT ══ -->
-	<div class="rule-double reveal" style="margin-top: 36px;"></div>
-	<section style="padding: 36px 0;" id="about">
-		<div class="col-wrap col-2" style="gap: 0; align-items: start;">
-			<div class="block" style="padding: 0 32px 0 0; border-right: 1.5px solid var(--ink);">
-				<div class="section-flag">ABOUT</div>
-				<div class="body-text" style="margin-top: 8px;">
-					<p>Hi. My name is SNQ. Programmer, modder, tinkerer. Started writing code at 14 — game mods that quickly grew into an obsession with building real software.</p>
-					<p>I work across the full stack. Rust for systems and performance-critical tools. TypeScript and React for the web layer. C# when the enterprise demands it. Most alive when the constraints are real and the answer isn't obvious.</p>
-					<p>Currently building integrated software solutions and leading technical estimates for large-scale electrical and instrumentation projects.</p>
-				</div>
+	<section id="about" class="reveal">
+		<div>
+			<div class="sec-label">About</div>
+			<div class="about-pull">
+				I notice software that <em>should exist</em> but doesn't.<br>Then I build it.
 			</div>
-			<div class="block tilt-2 reveal" style="background:var(--paper-dark); border:2px solid var(--ink); margin: 12px 0 0 24px; padding: 20px;">
-				<div style="font-family:var(--mono); font-size:8px; letter-spacing:0.3em; margin-bottom:10px; opacity:0.5;">OPERATIONAL SINCE</div>
-				<div style="font-family:var(--display); font-size:72px; line-height:1; color:var(--blue); filter:url(#ink-bleed);">2014</div>
-				<div class="rule-thick" style="margin: 12px 0;"></div>
-				<div style="font-family:var(--stamp); font-size:12px; line-height:1.8; opacity:0.7;">
-					github.com/l-snq<br>Full Stack Developer<br>Systems Programmer
-				</div>
+			<div class="about-body">
+				<p>Hi. My name is SNQ. Programmer, modder, tinkerer. Started writing code at 14 — game mods that quickly grew into an obsession with building real software.</p>
+				<p>I work across the full stack. Most alive when the constraints are real and the answer isn't obvious.</p>
+				<p>Currently building integrated software solutions and leading technical estimates for large-scale electrical and instrumentation projects.</p>
 			</div>
+		</div>
+		<div class="about-stat">
+			<div class="stat-label">Operational Since</div>
+			<div class="stat-value">2014</div>
+			<div class="stat-detail">
+				github.com/l-snq<br>
+				Full Stack Developer<br>
+				Systems Programmer
+			</div>
+			<div class="stat-year">2014</div>
 		</div>
 	</section>
 
 	<!-- ══ WORKS ══ -->
-	<div class="torn reveal"></div>
-	<div class="block-inked" style="padding: 36px 28px;" id="works">
-		<div class="section-flag blue" style="background:var(--paper); color:var(--ink); margin-bottom:20px;">SELECTED WORKS</div>
-		<div>
+	<section id="works" class="reveal">
+		<div class="sec-label">Selected Works</div>
 
-			<a href="https://github.com/l-snq/tau" target="_blank" class="work-entry" style="border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">01</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">TAU</div>
-					<div class="work-desc" style="color:var(--paper);">App launcher for Linux — Spotlight, but for people who live in the terminal. Custom CSS, keybinding shortcuts, optimized UX.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">RUST</span><span style="background:var(--paper);color:var(--ink);">GTK4</span><span style="background:var(--paper);color:var(--ink);">CLI</span></div>
-			</a>
+		<a href="https://github.com/l-snq/tau" target="_blank" class="work-entry">
+			<div class="work-num">01</div>
+			<div>
+				<div class="work-title">TAU</div>
+				<div class="work-desc">App launcher for Linux — Spotlight, but for people who live in the terminal. Custom CSS, keybinding shortcuts, optimized UX.</div>
+			</div>
+			<div class="work-tags"><span>RUST</span><span>GTK4</span><span>CLI</span></div>
+		</a>
 
-			<a href="https://www.linkedin.com/posts/jayden-tweedie_hello-everyone-today-i-am-unveiling-adx-activity-7400087380591931392-qQSK" target="_blank" class="work-entry" style="border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">02</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">ADX</div>
-					<div class="work-desc" style="color:var(--paper);">AI-powered document &amp; spec reviewer. Summarizes and compares large document sets using on-device LLM inference.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">RUST</span><span style="background:var(--paper);color:var(--ink);">TAURI</span><span style="background:var(--paper);color:var(--ink);">LLAMA</span></div>
-			</a>
+		<a href="https://www.linkedin.com/posts/jayden-tweedie_hello-everyone-today-i-am-unveiling-adx-activity-7400087380591931392-qQSK" target="_blank" class="work-entry">
+			<div class="work-num">02</div>
+			<div>
+				<div class="work-title">ADX</div>
+				<div class="work-desc">AI-powered document &amp; spec reviewer. Summarizes and compares large document sets using on-device LLM inference.</div>
+			</div>
+			<div class="work-tags"><span>RUST</span><span>TAURI</span><span>LLAMA</span></div>
+		</a>
 
-			<a href="https://www.linkedin.com/posts/jayden-tweedie_rustlang-graphicsprogramming-creativecoding-activity-7405154702260228099-eIlR" target="_blank" class="work-entry" style="border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">03</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">VEC2K</div>
-					<div class="work-desc" style="color:var(--paper);">Freeform vector paint app dedicated to the early-2000s aesthetic. GPU-accelerated, pixel-perfect tooling.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">RUST</span><span style="background:var(--paper);color:var(--ink);">WGPU</span><span style="background:var(--paper);color:var(--ink);">EGUI</span></div>
-			</a>
+		<a href="https://www.linkedin.com/posts/jayden-tweedie_rustlang-graphicsprogramming-creativecoding-activity-7405154702260228099-eIlR" target="_blank" class="work-entry">
+			<div class="work-num">03</div>
+			<div>
+				<div class="work-title">VEC2K</div>
+				<div class="work-desc">Freeform vector paint app dedicated to the early-2000s aesthetic. GPU-accelerated, pixel-perfect tooling.</div>
+			</div>
+			<div class="work-tags"><span>RUST</span><span>WGPU</span><span>EGUI</span></div>
+		</a>
 
-			<a href="https://github.com/l-snq/dioxane/" target="_blank" class="work-entry" style="border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">04</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">RUST GAME ENGINE</div>
-					<div class="work-desc" style="color:var(--paper);">Prototype game engine — exploring architecture patterns and performance tradeoffs at the systems level.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">RUST</span><span style="background:var(--paper);color:var(--ink);">BEVYRS</span></div>
-			</a>
+		<a href="https://github.com/l-snq/dioxane/" target="_blank" class="work-entry">
+			<div class="work-num">04</div>
+			<div>
+				<div class="work-title">Rust Game Engine</div>
+				<div class="work-desc">Prototype game engine — exploring architecture patterns and performance tradeoffs at the systems level.</div>
+			</div>
+			<div class="work-tags"><span>RUST</span><span>BEVY</span></div>
+		</a>
 
-			<a href="https://miniascii.netlify.app" target="_blank" class="work-entry" style="border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">05</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">MINI.ASCII</div>
-					<div class="work-desc" style="color:var(--paper);">Minimalist ASCII art drawing tool. Grid-based canvas, runs in the browser, zero dependencies.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">WEB</span><span style="background:var(--paper);color:var(--ink);">CANVAS</span></div>
-			</a>
+		<a href="https://miniascii.netlify.app" target="_blank" class="work-entry">
+			<div class="work-num">05</div>
+			<div>
+				<div class="work-title">MINI.ASCII</div>
+				<div class="work-desc">Minimalist ASCII art drawing tool. Grid-based canvas, runs in the browser, zero dependencies.</div>
+			</div>
+			<div class="work-tags"><span>WEB</span><span>CANVAS</span></div>
+		</a>
 
-			<a href="https://github.com/l-snq/porter" target="_blank" class="work-entry" style="border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">06</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">PORTER</div>
-					<div class="work-desc" style="color:var(--paper);">Clean YT-DL wrapper. No ads, no popups, no garbage.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">REACT</span><span style="background:var(--paper);color:var(--ink);">NODE</span></div>
-			</a>
+		<a href="https://github.com/l-snq/porter" target="_blank" class="work-entry">
+			<div class="work-num">06</div>
+			<div>
+				<div class="work-title">PORTER</div>
+				<div class="work-desc">Clean YT-DL wrapper. No ads, no popups, no garbage.</div>
+			</div>
+			<div class="work-tags"><span>REACT</span><span>NODE</span></div>
+		</a>
 
-			<a href="https://github.com/l-snq/retroPaint" target="_blank" class="work-entry" style="border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">07</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">RETROPAINT FORK</div>
-					<div class="work-desc" style="color:var(--paper);">Fork of RetroPaint with quality-of-life improvements and extended feature set.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">FORK</span></div>
-			</a>
+		<a href="https://github.com/l-snq/retroPaint" target="_blank" class="work-entry">
+			<div class="work-num">07</div>
+			<div>
+				<div class="work-title">RetroPaint Fork</div>
+				<div class="work-desc">Fork of RetroPaint with quality-of-life improvements and extended feature set.</div>
+			</div>
+			<div class="work-tags"><span>FORK</span></div>
+		</a>
 
-			<a href="https://github.com/l-snq/servicer-web-app" target="_blank" class="work-entry" style="border-bottom:none; border-color:rgba(240,232,208,0.2); color:var(--paper);">
-				<div class="work-num" style="color:var(--paper); opacity:0.3;">08</div>
-				<div class="work-body">
-					<div class="work-title" style="color:var(--paper);">GOODS &amp; SERVICE TRADER</div>
-					<div class="work-desc" style="color:var(--paper);">Trading application built for the DevelopEd 3.0 Hackathon.</div>
-				</div>
-				<div class="work-tags"><span style="background:var(--paper);color:var(--ink);">HACKATHON</span></div>
-			</a>
+		<a href="https://github.com/l-snq/servicer-web-app" target="_blank" class="work-entry" style="border-bottom:none;">
+			<div class="work-num">08</div>
+			<div>
+				<div class="work-title">Goods &amp; Service Trader</div>
+				<div class="work-desc">Trading application built for the DevelopEd 3.0 Hackathon.</div>
+			</div>
+			<div class="work-tags"><span>HACKATHON</span></div>
+		</a>
 
-		</div>
-	</div>
-	<div class="torn reveal" style="transform:rotate(180deg) scaleX(-1);"></div>
+	</section>
 
 	<!-- ══ HISTORY ══ -->
-	<section style="padding: 36px 0;" id="history" class="reveal">
-		<div class="col-wrap col-2" style="gap:0; align-items:start;">
-			<div style="padding-right: 32px; border-right: 1.5px solid var(--ink);">
-				<div class="section-flag">WORK HISTORY</div>
-				<div class="hist-entry" style="margin-top:8px;">
-					<div class="hist-date">2024 — PRESENT</div>
+	<section id="history" class="reveal">
+		<div class="sec-label">Work History</div>
+		<div class="hist-grid">
+			<div>
+				<div class="hist-entry">
+					<div class="hist-date">2024 — Present</div>
 					<div class="hist-co">Leading Electrical &amp; Instrumentation Contractor</div>
 					<div class="hist-title">Full Stack Developer / Lead Estimator</div>
 					<div class="hist-desc">Leading electrical and instrumentation estimates for commercial and industrial projects. Building integrated software for metadata transfer between Bluebeam, Accubid, and Kahua.</div>
 				</div>
 				<div class="hist-entry">
-					<div class="hist-date">2020 — PRESENT</div>
+					<div class="hist-date">2020 — Present</div>
 					<div class="hist-co">Enterprise Testing &amp; Analytics Platform</div>
 					<div class="hist-title">Full Stack Developer</div>
 					<div class="hist-desc">Lead UI development using Vue and Flask Python. Reduced server-side compilation time by 5ms through dependency optimization and redundancy removal.</div>
 				</div>
 			</div>
-			<div style="padding-left: 32px;">
-				<div class="hist-entry" style="border-top:1px solid rgba(26,16,8,0.3); margin-top:0; padding-top:20px;">
+			<div>
+				<div class="hist-entry">
 					<div class="hist-date">2022 — 2023</div>
 					<div class="hist-co">Healthcare Technology Company</div>
 					<div class="hist-title">Junior Full Stack Developer</div>
@@ -676,54 +670,45 @@
 	</section>
 
 	<!-- ══ ARSENAL ══ -->
-	<div class="rule-double reveal"></div>
-	<section style="padding: 36px 0 0;" id="arsenal" class="reveal">
-		<div class="section-flag">ARSENAL</div>
-		<div class="col-wrap" style="grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 20px;">
-			<div class="block tilt-1" style="background:var(--paper-dark); border:1.5px solid var(--ink); margin: 0 -4px 0 0;">
-				<div class="skill-label">Languages</div>
-				<div class="skill-items">Rust<br>TypeScript<br>JavaScript<br>C#<br>Python<br>Ruby<br>C · Lua<br>HTML/CSS</div>
+	<section id="arsenal" class="reveal">
+		<div class="sec-label">Arsenal</div>
+		<div class="skill-grid">
+			<div class="skill-block">
+				<div class="skill-block-label">Languages</div>
+				<div class="skill-block-items">Rust<br>TypeScript<br>JavaScript<br>Python<br>Ruby<br>C · Lua<br>HTML/CSS</div>
 			</div>
-			<div class="block tilt-5" style="background:var(--paper); border:1.5px solid var(--ink); margin: 8px 0 0 4px; position:relative; z-index:3;">
-				<div class="skill-label">Frameworks</div>
-				<div class="skill-items">React<br>React Native<br>Next.js<br>Vue · Svelte<br>Angular<br>ASP.NET<br>Rails<br>FastAPI</div>
+			<div class="skill-block">
+				<div class="skill-block-label">Frameworks</div>
+				<div class="skill-block-items">React<br>React Native<br>Next.js<br>Vue · Svelte<br>Angular<br>ASP.NET<br>Rails<br>FastAPI</div>
 			</div>
-			<div class="block tilt-4" style="background:var(--paper-dark); border:1.5px solid var(--ink); margin: -6px 0 0 -4px;">
-				<div class="skill-label">Tools</div>
-				<div class="skill-items">Git · Docker<br>Unix Shell<br>Webpack<br>Neovim<br>VS Code<br>Azure DevOps<br>CLI</div>
+			<div class="skill-block">
+				<div class="skill-block-label">Tools</div>
+				<div class="skill-block-items">Git · Docker<br>Unix Shell<br>Webpack<br>Neovim<br>VS Code<br>Azure DevOps<br>CLI</div>
 			</div>
-			<div class="block block-blue tilt-6 reveal" style="margin: 12px 0 0 -4px; padding: 20px;">
-				<div class="skill-label" style="background:var(--paper); color:var(--ink);">Education</div>
-				<div class="skill-items" style="color:var(--paper);">
-					Certificate in<br>Software Dev.<br><br>ACTI · 2021
-				</div>
+			<div class="skill-block">
+				<div class="skill-block-label">Education</div>
+				<div class="skill-block-items">Certificate in<br>Software Dev.<br><br>ACTI · 2021</div>
 			</div>
 		</div>
 	</section>
 
 	<!-- ══ CONTACT ══ -->
-	<div style="margin-top: 52px; padding-top: 36px; border-top: 8px solid var(--ink);" id="contact" class="reveal">
-		<div class="col-wrap col-2" style="gap:0; align-items:start;">
-			<div>
-				<div class="contact-giant">LET'S<br>BUILD<br><span>SOME<br>THING.</span></div>
-			</div>
-			<div style="padding-left: 32px; border-left: 1.5px solid var(--ink);">
-				<div class="section-flag" style="margin-bottom: 20px;">GET IN TOUCH</div>
-				<a href="https://github.com/l-snq" target="_blank" class="contact-link">
-					github.com/l-snq <span class="arr">→</span>
-				</a>
-			</div>
-		</div>
-	</div>
+	<section id="contact" class="reveal">
+		<div class="contact-giant">LET'S<br>BUILD<br><span>SOME<br>THING.</span></div>
+		<div class="sec-label">Get in Touch</div>
+		<a href="https://github.com/l-snq" target="_blank" class="contact-link">
+			github.com/l-snq <span class="arr">→</span>
+		</a>
+	</section>
 
 	<!-- ══ FOOTER ══ -->
 	<footer class="footer reveal">
 		<div class="footer-copy">
-			<strong style="opacity:1;">SNQ</strong> &nbsp;·&nbsp; Full Stack Developer &nbsp;·&nbsp; Systems Programmer<br>
+			<strong style="color:var(--white);">SNQ</strong> &nbsp;·&nbsp; Full Stack Developer &nbsp;·&nbsp; Systems Programmer<br>
 			Rust &nbsp;·&nbsp; TypeScript &nbsp;·&nbsp; C# &nbsp;·&nbsp; React &nbsp;·&nbsp; Svelte &nbsp;·&nbsp; Vue &nbsp;·&nbsp; ASP.NET<br>
 			github.com/l-snq &nbsp;·&nbsp; All Rights Reserved &nbsp;·&nbsp; 2025
 		</div>
-		<button class="game-btn" id="game-btn">LAUNCH COMBAT SIM</button>
+		<button class="game-btn" id="game-btn">Launch Combat Sim</button>
 	</footer>
 
 </div><!-- /page -->
@@ -797,7 +782,7 @@ function startGame() {
 		update(){this.x+=this.dx*this.speed; this.y+=this.dy*this.speed; this.life--;}
 		draw(){
 			const p=iso(this.x,this.y);
-			ctx.fillStyle='#f0e8d0'; ctx.shadowColor='#f0e8d0'; ctx.shadowBlur=6;
+			ctx.fillStyle='#3d6eff'; ctx.shadowColor='#3d6eff'; ctx.shadowBlur=8;
 			ctx.beginPath(); ctx.arc(canvas.width/2+p.x,canvas.height/2+p.y,this.size,0,Math.PI*2); ctx.fill();
 			ctx.shadowBlur=0;
 		}
@@ -809,7 +794,7 @@ function startGame() {
 			this.vx=(Math.random()-.5)*4; this.vy=(Math.random()-.5)*4;
 			this.vz=Math.random()*3+2; this.gravity=0.2;
 			this.size=Math.random()*3+2; this.life=30; this.maxLife=30;
-			this.color=['#0f2a6e','#1a3d9e','#f0e8d0','#091a46'][Math.floor(Math.random()*4)];
+			this.color=['#1a3d9e','#3d6eff','#a8c0ff','#091a46'][Math.floor(Math.random()*4)];
 		}
 		update(){
 			this.x+=this.vx; this.y+=this.vy; this.z+=this.vz; this.vz-=this.gravity; this.life--;
@@ -826,7 +811,7 @@ function startGame() {
 	const burst = (x,y,n=8) => { for(let i=0;i<n;i++) particles.push(new Particle(x,y)); };
 
 	function drawGrid(){
-		ctx.strokeStyle='rgba(15,42,110,0.12)'; ctx.lineWidth=1;
+		ctx.strokeStyle='rgba(61,110,255,0.08)'; ctx.lineWidth=1;
 		const gs=40;
 		for(let gx=-15;gx<=15;gx++) for(let gy=-15;gy<=15;gy++){
 			const wx=Math.floor(pl.x/gs)*gs+gx*gs, wy=Math.floor(pl.y/gs)*gs+gy*gs;
@@ -840,9 +825,9 @@ function startGame() {
 		const p=iso(pl.x,pl.y), cx=canvas.width/2+p.x, cy=canvas.height/2+p.y, s=pl.size;
 		ctx.fillStyle='rgba(0,0,0,0.3)';
 		ctx.beginPath(); ctx.ellipse(cx,cy+5,s*.8,s*.4,0,0,Math.PI*2); ctx.fill();
-		ctx.fillStyle='#f0e8d0'; ctx.shadowColor='#f0e8d0'; ctx.shadowBlur=10;
+		ctx.fillStyle='#e8eeff'; ctx.shadowColor='#3d6eff'; ctx.shadowBlur=12;
 		ctx.beginPath(); ctx.moveTo(cx,cy-s*2); ctx.lineTo(cx+s,cy); ctx.lineTo(cx-s,cy); ctx.closePath(); ctx.fill();
-		ctx.fillStyle='#d8ccaa'; ctx.shadowBlur=0;
+		ctx.fillStyle='#a8c0ff'; ctx.shadowBlur=0;
 		ctx.beginPath(); ctx.moveTo(cx-s,cy); ctx.lineTo(cx,cy+s*.5); ctx.lineTo(cx,cy-s*2); ctx.closePath(); ctx.fill();
 	}
 
@@ -871,7 +856,7 @@ function startGame() {
 
 	const loop = () => {
 		if(!running) return;
-		ctx.fillStyle='#1a1008'; ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.fillStyle='#06080f'; ctx.fillRect(0,0,canvas.width,canvas.height);
 		drawGrid();
 
 		if(keys['w']||keys['ArrowUp'])    pl.y-=pl.speed;
@@ -914,5 +899,6 @@ function startGame() {
 	requestAnimationFrame(loop);
 }
 </script>
+
 </body>
 </html>
