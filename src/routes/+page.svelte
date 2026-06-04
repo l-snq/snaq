@@ -12,28 +12,28 @@
     renderer.toneMappingExposure = 1.1;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x06080f);
-    scene.fog = new THREE.FogExp2(0x06080f, 0.035);
+    scene.background = new THREE.Color(0x0d0802);
+    scene.fog = new THREE.FogExp2(0x0d0802, 0.035);
 
     const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 200);
     camera.position.set(0, 1, 7);
 
     // ── Lights ──
-    scene.add(new THREE.AmbientLight(0x0a0d18, 1.0));
+    scene.add(new THREE.AmbientLight(0x130d04, 1.0));
 
-    const keyLight = new THREE.DirectionalLight(0xa8c0ff, 2.0);
+    const keyLight = new THREE.DirectionalLight(0xffbe8a, 2.0);
     keyLight.position.set(4, 6, 4);
     scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0x3d6eff, 1.2);
+    const rimLight = new THREE.DirectionalLight(0xff6a1a, 1.2);
     rimLight.position.set(-5, -2, -3);
     scene.add(rimLight);
 
-    const pt1 = new THREE.PointLight(0x3d6eff, 3.0, 12);
+    const pt1 = new THREE.PointLight(0xff6a1a, 3.0, 12);
     pt1.position.set(0, 0, 3);
     scene.add(pt1);
 
-    const pt2 = new THREE.PointLight(0x1a3d9e, 1.5, 10);
+    const pt2 = new THREE.PointLight(0xcc4400, 1.5, 10);
     pt2.position.set(3, -3, 0);
     scene.add(pt2);
 
@@ -45,13 +45,13 @@
     }
     const starGeo = new THREE.BufferGeometry();
     starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0xa8c0ff, size: 0.12, sizeAttenuation: true, transparent: true, opacity: 0.7 });
+    const starMat = new THREE.PointsMaterial({ color: 0xffbe8a, size: 0.12, sizeAttenuation: true, transparent: true, opacity: 0.7 });
     scene.add(new THREE.Points(starGeo, starMat));
 
     // ── Central icosahedron ──
     const icoGeo = new THREE.IcosahedronGeometry(1.1, 0);
     const icoMat = new THREE.MeshStandardMaterial({
-      color: 0x0a0d18,
+      color: 0x130d04,
       roughness: 0.1,
       metalness: 0.95,
       envMapIntensity: 1,
@@ -62,14 +62,14 @@
     // Wireframe over ico
     const icoEdges = new THREE.LineSegments(
       new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.12, 0)),
-      new THREE.LineBasicMaterial({ color: 0x3d6eff, transparent: true, opacity: 0.9 })
+      new THREE.LineBasicMaterial({ color: 0xff6a1a, transparent: true, opacity: 0.9 })
     );
     scene.add(icoEdges);
 
     // ── Torus rings ──
     const ring1 = new THREE.Mesh(
       new THREE.TorusGeometry(2.0, 0.03, 8, 100),
-      new THREE.MeshStandardMaterial({ color: 0x3d6eff, roughness: 0.1, metalness: 1.0, emissive: 0x1a3d9e, emissiveIntensity: 0.4 })
+      new THREE.MeshStandardMaterial({ color: 0xff6a1a, roughness: 0.1, metalness: 1.0, emissive: 0xcc4400, emissiveIntensity: 0.4 })
     );
     ring1.rotation.x = Math.PI / 2;
     const ringGroup1 = new THREE.Group();
@@ -78,7 +78,7 @@
 
     const ring2 = new THREE.Mesh(
       new THREE.TorusGeometry(2.4, 0.018, 8, 100),
-      new THREE.MeshStandardMaterial({ color: 0x1a3d9e, roughness: 0.2, metalness: 1.0, emissive: 0x091a46, emissiveIntensity: 0.3 })
+      new THREE.MeshStandardMaterial({ color: 0xcc4400, roughness: 0.2, metalness: 1.0, emissive: 0x7a2200, emissiveIntensity: 0.3 })
     );
     ring2.rotation.set(Math.PI / 3, Math.PI / 5, 0);
     const ringGroup2 = new THREE.Group();
@@ -87,7 +87,7 @@
 
     const ring3 = new THREE.Mesh(
       new THREE.TorusGeometry(1.6, 0.012, 8, 100),
-      new THREE.MeshStandardMaterial({ color: 0xa8c0ff, roughness: 0.1, metalness: 1.0, emissive: 0x3d6eff, emissiveIntensity: 0.2, transparent: true, opacity: 0.6 })
+      new THREE.MeshStandardMaterial({ color: 0xffbe8a, roughness: 0.1, metalness: 1.0, emissive: 0xff6a1a, emissiveIntensity: 0.2, transparent: true, opacity: 0.6 })
     );
     ring3.rotation.set(-Math.PI / 4, Math.PI / 6, 0);
     const ringGroup3 = new THREE.Group();
@@ -106,10 +106,10 @@
       const mesh = new THREE.Mesh(
         new THREE.TetrahedronGeometry(size, 0),
         new THREE.MeshStandardMaterial({
-          color: i % 3 === 0 ? 0x3d6eff : i % 3 === 1 ? 0xa8c0ff : 0x1a3d9e,
+          color: i % 3 === 0 ? 0xff6a1a : i % 3 === 1 ? 0xffbe8a : 0xcc4400,
           roughness: 0.1,
           metalness: 0.9,
-          emissive: i % 3 === 0 ? 0x1a3d9e : 0x091a46,
+          emissive: i % 3 === 0 ? 0xcc4400 : 0x7a2200,
           emissiveIntensity: 0.5,
         })
       );

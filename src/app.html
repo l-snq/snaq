@@ -12,17 +12,17 @@
 		*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 		:root {
-			--void:    #06080f;
-			--deep:    #0a0d18;
-			--surface: #0e1220;
-			--edge:    #151c30;
-			--blue:    #1a3d9e;
-			--blue-hi: #3d6eff;
-			--blue-lo: #091a46;
-			--glow:    #4d7fff;
-			--frost:   #a8c0ff;
-			--white:   #e8eeff;
-			--dim:     #4a5580;
+			--void:    #0d0802;
+			--deep:    #130d04;
+			--surface: #1a1008;
+			--edge:    #2a1c0a;
+			--blue:    #7a3200;
+			--blue-hi: #ff6a1a;
+			--blue-lo: #3d1800;
+			--glow:    #ff8c42;
+			--frost:   #ffbe8a;
+			--white:   #fff2e8;
+			--dim:     #7a5a3a;
 			--display: 'Bebas Neue', sans-serif;
 			--mono:    'IBM Plex Mono', monospace;
 		}
@@ -768,11 +768,11 @@ function startGame() {
 			const p=iso(this.x,this.y), cx=canvas.width/2+p.x, cy=canvas.height/2+p.y, s=this.size, h=s*1.5;
 			ctx.fillStyle='rgba(0,0,0,0.3)';
 			ctx.beginPath(); ctx.ellipse(cx,cy+10,s*.8,s*.4,0,0,Math.PI*2); ctx.fill();
-			ctx.fillStyle='#1a3d9e';
+			ctx.fillStyle='#cc4400';
 			ctx.beginPath(); ctx.moveTo(cx,cy-h); ctx.lineTo(cx+s,cy-h+s*.5); ctx.lineTo(cx,cy-h+s); ctx.lineTo(cx-s,cy-h+s*.5); ctx.closePath(); ctx.fill();
-			ctx.fillStyle='#091a46';
+			ctx.fillStyle='#7a2200';
 			ctx.beginPath(); ctx.moveTo(cx-s,cy-h+s*.5); ctx.lineTo(cx,cy-h+s); ctx.lineTo(cx,cy+s*.5); ctx.lineTo(cx-s,cy); ctx.closePath(); ctx.fill();
-			ctx.fillStyle='#0f2a6e';
+			ctx.fillStyle='#993300';
 			ctx.beginPath(); ctx.moveTo(cx+s,cy-h+s*.5); ctx.lineTo(cx,cy-h+s); ctx.lineTo(cx,cy+s*.5); ctx.lineTo(cx+s,cy); ctx.closePath(); ctx.fill();
 		}
 	}
@@ -782,7 +782,7 @@ function startGame() {
 		update(){this.x+=this.dx*this.speed; this.y+=this.dy*this.speed; this.life--;}
 		draw(){
 			const p=iso(this.x,this.y);
-			ctx.fillStyle='#3d6eff'; ctx.shadowColor='#3d6eff'; ctx.shadowBlur=8;
+			ctx.fillStyle='#ff6a1a'; ctx.shadowColor='#ff6a1a'; ctx.shadowBlur=8;
 			ctx.beginPath(); ctx.arc(canvas.width/2+p.x,canvas.height/2+p.y,this.size,0,Math.PI*2); ctx.fill();
 			ctx.shadowBlur=0;
 		}
@@ -794,7 +794,7 @@ function startGame() {
 			this.vx=(Math.random()-.5)*4; this.vy=(Math.random()-.5)*4;
 			this.vz=Math.random()*3+2; this.gravity=0.2;
 			this.size=Math.random()*3+2; this.life=30; this.maxLife=30;
-			this.color=['#1a3d9e','#3d6eff','#a8c0ff','#091a46'][Math.floor(Math.random()*4)];
+			this.color=['#cc4400','#ff6a1a','#ffbe8a','#7a2200'][Math.floor(Math.random()*4)];
 		}
 		update(){
 			this.x+=this.vx; this.y+=this.vy; this.z+=this.vz; this.vz-=this.gravity; this.life--;
@@ -825,9 +825,9 @@ function startGame() {
 		const p=iso(pl.x,pl.y), cx=canvas.width/2+p.x, cy=canvas.height/2+p.y, s=pl.size;
 		ctx.fillStyle='rgba(0,0,0,0.3)';
 		ctx.beginPath(); ctx.ellipse(cx,cy+5,s*.8,s*.4,0,0,Math.PI*2); ctx.fill();
-		ctx.fillStyle='#e8eeff'; ctx.shadowColor='#3d6eff'; ctx.shadowBlur=12;
+		ctx.fillStyle='#fff2e8'; ctx.shadowColor='#ff6a1a'; ctx.shadowBlur=12;
 		ctx.beginPath(); ctx.moveTo(cx,cy-s*2); ctx.lineTo(cx+s,cy); ctx.lineTo(cx-s,cy); ctx.closePath(); ctx.fill();
-		ctx.fillStyle='#a8c0ff'; ctx.shadowBlur=0;
+		ctx.fillStyle='#ffbe8a'; ctx.shadowBlur=0;
 		ctx.beginPath(); ctx.moveTo(cx-s,cy); ctx.lineTo(cx,cy+s*.5); ctx.lineTo(cx,cy-s*2); ctx.closePath(); ctx.fill();
 	}
 
@@ -856,7 +856,7 @@ function startGame() {
 
 	const loop = () => {
 		if(!running) return;
-		ctx.fillStyle='#06080f'; ctx.fillRect(0,0,canvas.width,canvas.height);
+		ctx.fillStyle='#0d0802'; ctx.fillRect(0,0,canvas.width,canvas.height);
 		drawGrid();
 
 		if(keys['w']||keys['ArrowUp'])    pl.y-=pl.speed;
