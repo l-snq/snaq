@@ -699,6 +699,9 @@
 		<a href="https://github.com/l-snq" target="_blank" class="contact-link">
 			github.com/l-snq <span class="arr">→</span>
 		</a>
+		<a class="contact-link" id="email-link" href="#" style="cursor:pointer;">
+			<span id="email-label">click to reveal email</span> <span class="arr">→</span>
+		</a>
 	</section>
 
 	<!-- ══ FOOTER ══ -->
@@ -728,6 +731,28 @@
 </div>
 
 <script>
+// ── EMAIL ──
+(function() {
+	const rot13 = s => s.replace(/[a-zA-Z]/g, c =>
+		String.fromCharCode(c.charCodeAt(0) + (c.toLowerCase() < 'n' ? 13 : -13))
+	);
+	const encoded = 'irp2x@cebgba.zr';
+	const link = document.getElementById('email-link');
+	const label = document.getElementById('email-label');
+	let revealed = false;
+	link.addEventListener('click', e => {
+		e.preventDefault();
+		if (!revealed) {
+			const addr = rot13(encoded);
+			label.textContent = addr;
+			link.href = 'mailto:' + addr;
+			revealed = true;
+		} else {
+			window.location.href = link.href;
+		}
+	});
+})();
+
 // ── REVEAL ──
 const obs = new IntersectionObserver(entries => {
 	entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
